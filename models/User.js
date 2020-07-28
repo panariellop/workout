@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users"
-    },
     status: {
         type: String, 
         required: true,

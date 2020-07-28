@@ -1,4 +1,3 @@
 {
-    "mongoURI": "mongodb+srv://panariellop:NTASnwPN83znUQ8@cluster0.xwdyn.gcp.mongodb.net/main?retryWrites=true&w=majority",
-    "secret": "W2mqs:cJlT0Dn?h@05BV1BHBL9#xk1x61N5^PF[BNej>UCV<ShHG>X{KWWvFZKX"
+    "mongoURI": "mongodb+srv://panariellop:NTASnwPN83znUQ8@cluster0.xwdyn.gcp.mongodb.net/main?retryWrites=true&w=majority"
 }

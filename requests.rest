@@ -1,11 +1,22 @@
 
 
-### Create a user
+### Register a User
+POST http://localhost:5000/api/auth/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "panariellop",
+    "email": "pierodpanariello@gmail.com",
+    "password": "password",
+    "status": "ADMIN"
+}
+
+
+### Login a user 
 POST http://localhost:5000/api/auth/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Piero"
+    "username": "panariellop",
+    "password": "password"
 }
-
-###
