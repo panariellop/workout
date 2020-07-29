@@ -1,18 +1,6 @@
 const mongoose = require('mongoose');
 
-const JournalEntrySchema = mongoose.Schema({
-    user: {
-        type: String,
-        ref: "User"
-    },
-    date:{
-        type: Date,
-        default: Date.now
-    },
-    exercise: {
-        type: String, 
-        required: true 
-    },
+const EntrySet = mongoose.Schema({
     weight: {
         type: String,
         required: false
@@ -29,6 +17,24 @@ const JournalEntrySchema = mongoose.Schema({
         type: String, 
         required: false,
     },
+})
+
+const JournalEntrySchema = mongoose.Schema({
+    user: {
+        type: String,
+        ref: "User"
+    },
+    date:{
+        type: Date,
+        default: Date.now
+    },
+    exercise: {
+        type: String, 
+        required: true 
+    },
+
+    sets: [EntrySet],
+    
     location: {
         type: String,
         required: false,
@@ -37,5 +43,7 @@ const JournalEntrySchema = mongoose.Schema({
     
 
 })
+
+
 
 module.exports = mongoose.model("JournalEntry", JournalEntrySchema); 

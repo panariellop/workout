@@ -11,28 +11,24 @@ const User = require('../../models/User');
 router.get("/", authenticateToken, async (req, res)=> {
     const entries = await JournalEntry.find({user: req.user.username}, null ,{sort: {date: -1}}); 
     return res.status(200).json(entries); 
-
-    
 }); 
 
 //DESC create a new entry
 router.post("/", authenticateToken, async(req,res)=> {
-    const { date, exercise, weight, reps, intensity, location, duration } = req.body
-    const newEntry = new JournalEntry({ date, exercise, weight, reps, intensity, location, duration, user: req.user.username })
+    const { date, exercise, sets} = req.body
+    const newEntry = new JournalEntry({ date, exercise, user: req.user.username, sets })
     newEntry.save()
     return res.status(200).json({msg: "Entry added"}); 
 })
 
 //DESC update an entry
 router.put('/:id', authenticateToken, async (req, res)=> {
-    const { date, exercise, weight, reps, intensity, location, duration } = req.body;
+    const { date, exercise, sets } = req.body;
     //Make sure the user is authorized to edit this entry 
     await JournalEntry.findById(req.params.id, (err, result)=> {
         if(err) return res.sendStatus(500)
         if(result.user !== req.user.username) return res.sendStatus(401)
-        result.updateOne({
-            date, exercise, weight, reps, intensity, location, duration
-        }, (err, raw)=> {
+        result.updateOne({ date, exercise, sets }, (err, raw)=> {
             if(err) return res.sendStatus(500)
             return res.status(200).json({msg: "Entry updated"})
         })
