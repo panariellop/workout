@@ -7,20 +7,45 @@ const User = require('../../models/User');
 //DESC All CRUD functionality for user's journal logs 
 //ACCESS protected by auth 
 
-//DESC get all of a user's exercises
+//DESC get all of a user's entries
 router.get("/", authenticateToken, async (req, res)=> {
-    //get user's _id 
-    const user = await User.findOne({username: req.user.username}); 
-    if(user === null) return res.sendStatus(401)
-    const entries = await JournalEntry.find({user: user._id}, null ,{sort: {date: -1}}); 
-
+    const entries = await JournalEntry.find({user: req.user.username}, null ,{sort: {date: -1}}); 
     return res.status(200).json(entries); 
 
     
+}); 
+
+//DESC create a new entry
+router.post("/", authenticateToken, async(req,res)=> {
+    const { date, exercise, weight, reps, intensity, location, duration } = req.body
+    const newEntry = new JournalEntry({ date, exercise, weight, reps, intensity, location, duration, user: req.user.username })
+    newEntry.save()
+    return res.status(200).json({msg: "Entry added"}); 
 })
 
-router.post("/", authenticateToken, async(req,res)=> {
-    
+//DESC update an entry
+router.put('/:id', authenticateToken, async (req, res)=> {
+    const { date, exercise, weight, reps, intensity, location, duration } = req.body;
+    //Make sure the user is authorized to edit this entry 
+    await JournalEntry.findById(req.params.id, (err, result)=> {
+        if(err) return res.sendStatus(500)
+        if(result.user !== req.user.username) return res.sendStatus(401)
+        result.updateOne({
+            date, exercise, weight, reps, intensity, location, duration
+        }, (err, raw)=> {
+            if(err) return res.sendStatus(500)
+            return res.status(200).json({msg: "Entry updated"})
+        })
+    })
+})
+
+router.delete('/:id', authenticateToken, async(req, res)=> {
+    await JournalEntry.findById(req.params.id, (err, result)=> {
+        if (err) return res.sendStatus(500)
+        if(result.user !== req.user.username) return res.sendStatus(401)
+        result.remove()
+        return res.status(200).json({msg: "Entry deleted"})
+    })
 })
 
 module.exports = router;

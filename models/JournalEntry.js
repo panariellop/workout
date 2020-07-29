@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const JournalEntrySchema = mongoose.Schema({
     user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "User"
     },
     date:{
