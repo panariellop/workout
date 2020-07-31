@@ -12,7 +12,7 @@ const {authenticateToken} = require("../../middleware/authenticateToken");
 router.post("/register", async (req, res)=> {
     const { username, email, password, status } = req.body; 
     if(!username || !password || !email){
-        return res.status(401).send("Please fill out login form completely.")
+        return res.status(401).send("Please fill out register form completely.")
     }
     const user = await User.findOne({username: username});
     if(user!==null){
@@ -21,16 +21,12 @@ router.post("/register", async (req, res)=> {
 
     const newUser = new User({username, email, password, status});
     newUser.save();
-
-    //Check if user was saved 
-    const savedUser = await User.findOne({username: username});
-    if(!savedUser) return res.sendStatus(500); 
     
     //Sign jwt
     const accessToken = jwt.sign({username: username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN }); 
     //Send refresh token to database 
     const refreshToken = jwt.sign({username: username}, process.env.REFRESH_TOKEN_SECRET); 
-    const newToken = new Token({refreshToken: refreshToken});
+    const newToken = new Token({refreshToken: refreshToken, user: username});
     newToken.save(); 
     //Respond to the user with their accessToken and refresh token
     return res.status(200).json({accessToken: accessToken, refreshToken: refreshToken})
@@ -64,7 +60,7 @@ router.post('/login', async (req, res) => {
 router.post('/token', async (req, res)=> {
     const requestToken = req.body.token; 
     //Check if token was given, is in the database, and matches one created
-    if(!requestToken) return res.sendStatus(400);
+    if(requestToken===null) return res.sendStatus(400);
     const dataToken = await Token.findOne({refreshToken: requestToken});
     if(dataToken===null) return res.sendStatus(401); 
     if(dataToken.refreshToken!==requestToken) return res.sendStatus(401);

@@ -7,7 +7,8 @@ const TokenSchema = mongoose.Schema({
     },
     user: {
         type: String, 
-        required: true, 
+        ref: "User",
+        required: true,
     }
 });
 

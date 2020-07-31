@@ -1,0 +1,25 @@
+
+.menubar-ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(38, 77, 208);
+    overflow: hidden; 
+}
+.menubar-option{
+    float: right; 
+    text-decoration: none;
+    padding: 15px; 
+}
+
+.menubar-link{
+    text-decoration: none;
+    color: white; 
+}
+
+
+.companyLogo{
+    font-size: large;
+    padding: 15px;     
+    float: left; 
+}

@@ -1,0 +1,50 @@
+.loginForm{
+  margin-top: 10%;
+  background-color: rgb(228, 228, 228);
+  text-align: center;
+  width: 300px; 
+  margin-left: auto; 
+  margin-right: auto; 
+  border: 0px; 
+  border-radius: 7px;
+  padding-top: 20px;
+  padding-bottom: 10px; 
+}
+.loginForm label{
+  letter-spacing: 0.4px; 
+  font-size: medium; 
+}
+.loginForm input{
+  transition: 0.4s;
+  border-radius: 5px;
+  border: 2px solid transparent; 
+  margin-top: 10px;
+  margin-bottom: 10px; 
+  height: 30px;
+  padding: 3px; 
+  background-color: rgb(184, 184, 184);
+}
+.loginForm input:focus{
+  transition: 0.4s; 
+  background-color: rgb(228, 228, 228);
+  border-color: lightgrey; 
+  border-bottom: 2px solid blue; 
+  border-radius: 3px;
+  outline: none;  
+}
+
+.loginForm input[type=submit]{
+  font-size: medium; 
+  border: 0px solid transparent; 
+  letter-spacing: 0.5px;
+  background-color: transparent; 
+  color: rgb(88, 81, 227)
+}
+.loginForm input[type=submit]:hover{
+  color: blue;
+  cursor: pointer; 
+}
+.loginForm label{
+  font-size: medium;
+
+}
