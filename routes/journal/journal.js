@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../../middleware/authenticateToken'); 
 const JournalEntry = require('../../models/JournalEntry'); 
-const User = require('../../models/User'); 
 //ROUTE /api/journal
 //DESC All CRUD functionality for user's journal logs 
 //ACCESS protected by auth 

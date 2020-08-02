@@ -36,7 +36,7 @@
 .loginForm input[type=submit]{
   font-size: medium; 
   border: 0px solid transparent; 
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   background-color: transparent; 
   color: rgb(88, 81, 227)
 }
@@ -47,4 +47,25 @@
 .loginForm label{
   font-size: medium;
 
+}
+
+.profile-details{
+  margin-left: 40px;
+}
+
+.profile-details-wrapper{
+  background-color: rgb(228, 228, 228);
+  border: 0px;
+  border-radius: 7px;
+  width: 50vw;
+}
+
+.profile-details-wrapper ul{
+  list-style-type: none; 
+  padding-left: 10px;
+}
+
+.profile-details-wrapper ul li{
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

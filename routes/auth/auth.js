@@ -64,9 +64,11 @@ router.post('/token', async (req, res)=> {
     const dataToken = await Token.findOne({refreshToken: requestToken});
     if(dataToken===null) return res.sendStatus(401); 
     if(dataToken.refreshToken!==requestToken) return res.sendStatus(401);
+    //Verify the token 
     jwt.verify(requestToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=> {
         if(err) return res.sendStatus(401)
-        const accessToken = jwt.sign({username: user.name}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5m' });
+        const username = jwt.decode(requestToken).username
+        const accessToken = jwt.sign({username: username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN });
         return res.status(200).json({ accessToken: accessToken }); 
     })
 

@@ -12,6 +12,7 @@ app.use(bodyParser.json())
 
 app.use('/api/auth/users', require('./routes/auth/auth')); 
 app.use('/api/journal', require('./routes/journal/journal'));
+app.use('/api/profile', require('./routes/profile/profile'))
 
 const PORT = process.env.PORT || 5000;
 
