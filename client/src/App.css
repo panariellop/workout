@@ -69,3 +69,29 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+.profile-details-wrapper ul li button{
+  font-size: medium; 
+  border: 0px solid transparent; 
+  letter-spacing: 0.4px;
+  background-color: transparent; 
+  color: rgb(88, 81, 227)
+}
+
+.profile-details-wrapper ul li button:hover{
+  color: blue;
+  cursor: pointer; 
+}
+.profile-details-button-danger:hover{
+  color: red ;
+  cursor: pointer;
+}
+.profile-details-wrapper ul li button:focus{
+  outline: none; 
+}
+
+
+
+
+
+

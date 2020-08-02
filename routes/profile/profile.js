@@ -12,5 +12,15 @@ router.get('/', authenticateToken, async (req,res)=> {
     return res.json(user)
 })
 
-
+router.post('/changepassword', authenticateToken, async (req, res)=> {
+	const { new_password, old_password } = req.body
+	var user = await User.findOne({username: req.user.username})
+	if(old_password != user.password){
+		return res.sendStatus(401)
+	}
+	const newUser = await  User.findOneAndUpdate({username: req.user.username}, {
+		password: new_password
+	})
+	return res.json(newUser)
+})
 module.exports = router
