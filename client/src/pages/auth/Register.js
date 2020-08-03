@@ -45,7 +45,7 @@ class Login extends React.Component {
             body: JSON.stringify({
                 username: this.state.username,
                 password: this.state.password,
-                email: this.state.password,
+                email: this.state.email,
                 status: "STANDARD"
 
             })

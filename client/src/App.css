@@ -82,10 +82,7 @@
   color: blue;
   cursor: pointer; 
 }
-.profile-details-button-danger:hover{
-  color: red ;
-  cursor: pointer;
-}
+
 .profile-details-wrapper ul li button:focus{
   outline: none; 
 }

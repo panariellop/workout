@@ -81,10 +81,24 @@ class Profile extends React.Component{
         const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
         .catch(e => console.log(e));
         await Cookies.set('accessToken', newAccessToken)
-
         //make api call to delete account
-
-        //forward to register page
+        fetch('http://localhost:5000/api/profile', {
+            method: "delete",
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': Cookies.get('accessToken')
+            },
+            body: JSON.stringify({
+                password: password 
+            })
+        }).then(res => {
+            if(res.status !== 200) return alert("There was an error deleting your account. Please try again.")
+            //Forward to register page 
+            window.location.replace('/login')
+            //Remove cookies 
+            Cookies.remove('accessToken')
+            Cookies.remove('refreshToken')
+        })
     }
 
     async componentDidMount(){
