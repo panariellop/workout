@@ -29,7 +29,7 @@ class DashboardEntry extends React.Component{
 
     const sets = props.sets.map((set, i)=> {
         return (
-          <p key = {i}>Set {i+1})   Weight: {set.weight} | Reps: {set.reps} | Duration: {set.duration} | Intensity: {set.intensity}</p>
+          <p key = {i}>Set {i+1})   Weight: {set.weight} {set.units} | Reps: {set.reps} | Duration: {set.duration} | Intensity: {set.intensity}</p>
         )
     })
 

@@ -15,7 +15,7 @@ class Logout extends React.Component {
     }
     handleToken(){
         var authed = false
-        fetch('http://localhost:5000/api/auth/users/token', {
+        fetch('/api/auth/users/token', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -26,30 +26,30 @@ class Logout extends React.Component {
         })
         .then(async res=> {
             switch(res.status){
-                default: 
-                    authed = false 
-                    break; 
+                default:
+                    authed = false
+                    break;
                 case 401:
                     console.log("refresh token invalid")
                     break
-                case 400: 
+                case 400:
                     console.log(this.state.refreshToken, "Refresh token not given")
                     break
-                case 200: 
-                    authed = true 
+                case 200:
+                    authed = true
                     res = await res.json()
-                    //Set the access cookie to the replied access token 
+                    //Set the access cookie to the replied access token
                     Cookies.set('accessToken', res.accessToken)
                     break
             }
 
         })
-        return authed 
+        return authed
     }
 
     handleLogout(e){
         e.preventDefault()
-        fetch('http://localhost:5000/api/auth/users/logout', {
+        fetch('/api/auth/users/logout', {
             method: 'DELETE',
             headers: {
                 'x-auth-token': Cookies.get('accessToken')
@@ -57,17 +57,17 @@ class Logout extends React.Component {
         })
         .then(res=> {
             switch(res.status){
-                default: 
+                default:
                     console.log("Unexpected error")
                     break
-                case 200: 
+                case 200:
                     window.location.replace('/login')
-                    //Remove access and refresh cookies 
+                    //Remove access and refresh cookies
                     Cookies.remove('accessToken')
                     Cookies.remove('refreshToken')
                     break
                 case 403:
-                    var refreshed = this.handleToken() 
+                    var refreshed = this.handleToken()
                     if(refreshed === true){
                         this.handleLogout()
                     }
@@ -75,8 +75,8 @@ class Logout extends React.Component {
             }
         })
     }
-    
-    
+
+
 
     render(){
         return(
@@ -86,9 +86,9 @@ class Logout extends React.Component {
                     <input type = "submit" value = "LOGOUT"/>
                 </form>
             </Fragment>
-        )   
+        )
     }
 }
 
 
-export default Logout 
+export default Logout

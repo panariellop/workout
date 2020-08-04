@@ -5,14 +5,14 @@ import RefreshAccessToken from '../../scripts/RefreshAccessToken'
 
 
 async function getUser(){
-    //Refresh the token 
+    //Refresh the token
     const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
     .catch(e => console.log(e));
     await Cookies.set('accessToken', newAccessToken)
-    //Make request 
-    var user = null 
-    await fetch("http://localhost:5000/api/profile", {
-        method: "get", 
+    //Make request
+    var user = null
+    await fetch("/api/profile", {
+        method: "get",
         headers: {
             'x-auth-token': Cookies.get('accessToken')
         }
@@ -20,18 +20,18 @@ async function getUser(){
     .then(res => res.json())
     .then(data => {
         if (data !== undefined){
-            user = data  
+            user = data
         }
     })
     .catch(e => console.log(e))
-    return user 
+    return user
 }
 
 class Profile extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            user: null 
+            user: null
         }
     }
 
@@ -42,13 +42,13 @@ class Profile extends React.Component{
         }
         var new_password = prompt("What would you like to change your password to?")
         if(new_password===null){
-            return 
+            return
         }
         const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
         .catch(e => console.log(e));
         await Cookies.set('accessToken', newAccessToken)
 
-        await fetch("http://localhost:5000/api/profile/changepassword", {
+        await fetch("/api/profile/changepassword", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -70,32 +70,32 @@ class Profile extends React.Component{
     async handleDeleteAccount(){
         var confirm = prompt("Are you sure you want to delete your account? If so, type YES into the input box.")
         if (confirm !== "YES"){
-            return 
+            return
         }
         var password = prompt("Please enter your password to confirm deleting your account.")
         if(password === null){
-            return 
+            return
         }
 
-        //Refresh tokens 
+        //Refresh tokens
         const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
         .catch(e => console.log(e));
         await Cookies.set('accessToken', newAccessToken)
         //make api call to delete account
-        fetch('http://localhost:5000/api/profile', {
+        fetch('/api/profile', {
             method: "delete",
             headers: {
                 'Content-Type': 'application/json',
                 'x-auth-token': Cookies.get('accessToken')
             },
             body: JSON.stringify({
-                password: password 
+                password: password
             })
         }).then(res => {
             if(res.status !== 200) return alert("There was an error deleting your account. Please try again.")
-            //Forward to register page 
+            //Forward to register page
             window.location.replace('/login')
-            //Remove cookies 
+            //Remove cookies
             Cookies.remove('accessToken')
             Cookies.remove('refreshToken')
         })
@@ -132,4 +132,4 @@ class Profile extends React.Component{
     }
 }
 
-export default Profile 
+export default Profile

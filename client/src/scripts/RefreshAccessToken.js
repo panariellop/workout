@@ -1,13 +1,13 @@
 const axios = require('axios');
 
-//This function is promise based. You need to call the function 
+//This function is promise based. You need to call the function
 //and then capture the response with newAccessToken().then(res=>console.log(res))
 
 async function RefreshAccessToken(refreshToken){
-    var newAccessToken = null 
+    var newAccessToken = null
     await axios({
         method: "POST",
-        url: "http://localhost:5000/api/auth/users/token",
+        url: "/api/auth/users/token",
         data: {
             token: refreshToken
         }

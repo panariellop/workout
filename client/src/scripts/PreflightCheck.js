@@ -3,15 +3,15 @@ const cookies = require('js-cookie')
 require('dotenv').config()
 
 async function preflightCheck(){
-	//Get cookies 
+	//Get cookies
 	var accessToken = cookies.get('accessToken')
 	var refreshToken = cookies.get('refreshToken')
 
-	//Refresh the access token 
-	var newAccessToken = null 
+	//Refresh the access token
+	var newAccessToken = null
     await axios({
         method: "POST",
-        url: "http://localhost:5000/api/auth/users/token",
+        url: "/api/auth/users/token",
         data: {
             token: refreshToken
         }

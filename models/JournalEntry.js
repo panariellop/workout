@@ -5,16 +5,24 @@ const EntrySet = mongoose.Schema({
         type: String,
         required: false
     },
+    units: {
+      type: String,
+      required: false
+    },
     reps: {
-        type: String, 
+        type: String,
         required: false,
     },
     duration: {
         type: String,
         required: false,
     },
+    distance: {
+        type: String,
+        required: false,
+    },
     intensity: {
-        type: String, 
+        type: String,
         required: false,
     },
 })
@@ -29,21 +37,21 @@ const JournalEntrySchema = mongoose.Schema({
         default: Date.now
     },
     exercise: {
-        type: String, 
-        required: true 
+        type: String,
+        required: true
     },
 
     sets: [EntrySet],
-    
+
     location: {
         type: String,
         required: false,
     }
 
-    
+
 
 })
 
 
 
-module.exports = mongoose.model("JournalEntry", JournalEntrySchema); 
+module.exports = mongoose.model("JournalEntry", JournalEntrySchema);

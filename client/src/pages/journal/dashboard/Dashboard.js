@@ -10,7 +10,7 @@ async function getUserEntries(){
   .catch(e => console.log(e));
   await Cookies.set('accessToken', newAccessToken)
   //make query to get all user entries
-  await fetch("http://localhost:5000/api/journal", {
+  await fetch("/api/journal", {
     method: 'get',
     headers: {
       'x-auth-token': Cookies.get('accessToken')
@@ -31,7 +31,7 @@ async function getUserEntries(){
     if(prev_entry === null){
       prev_entry = entries[i]
     }
-    if(new Date(prev_entry.date).toLocaleDateString() == new Date(entries[i].date).toLocaleDateString()){
+    if(new Date(prev_entry.date).toLocaleDateString() === new Date(entries[i].date).toLocaleDateString()){
       //push the entry to the array with the same date
       days[days.length-1].push(entries[i])
     }else{

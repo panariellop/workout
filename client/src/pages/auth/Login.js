@@ -6,7 +6,7 @@ class Login extends React.Component {
         super(props);
         this.state = {
             username: "",
-            password: "", 
+            password: "",
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -23,13 +23,13 @@ class Login extends React.Component {
     }
 
     handleSubmit(e) {
-        e.preventDefault(); 
-        //Validate inputs 
+        e.preventDefault();
+        //Validate inputs
         if (this.state.username==="" || this.state.password ==="" ){
             return alert("Please fill out the userame and password fields")
         }
-        //send information to the api 
-        fetch('http://localhost:5000/api/auth/users/login', {
+        //send information to the api
+        fetch('/api/auth/users/login', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ class Login extends React.Component {
             }
             cookies.set('accessToken', res.accessToken, {path: '/'})
             cookies.set('refreshToken', res.refreshToken, {path: '/'})
-            //forward to new page 
+            //forward to new page
             window.location.replace('/dashboard')
         })
         this.setState({
@@ -81,4 +81,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login 
+export default Login

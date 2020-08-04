@@ -9,7 +9,7 @@ class Login extends React.Component {
             username: "",
             email: "",
             password: "",
-            password2: "" 
+            password2: ""
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -19,7 +19,7 @@ class Login extends React.Component {
             username: "",
             email: "",
             password: "",
-            password2: "" 
+            password2: ""
         })
     }
 
@@ -28,16 +28,16 @@ class Login extends React.Component {
     }
 
     handleSubmit(e) {
-        e.preventDefault(); 
-        //Validate inputs 
+        e.preventDefault();
+        //Validate inputs
         if (this.state.username==="" || this.state.password ==="" || this.state.password2==="" ||this.state.email===""){
             return alert("Please fill out all of the fields.")
         }
         if(this.state.password !== this.state.password2){
             return alert("Passwords are not the same.")
         }
-        //send information to the api 
-        fetch('http://localhost:5000/api/auth/users/register', {
+        //send information to the api
+        fetch('/api/auth/users/register', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,9 +52,11 @@ class Login extends React.Component {
         })
         .then(res=> {
             switch(res.status){
-                case 500: 
+                default:
+                    break
+                case 500:
                     return alert('User already exists. Please use a different email or username.');
-                case 401: 
+                case 401:
                     return alert('Please fill out the form completely.')
             }
 
@@ -66,7 +68,7 @@ class Login extends React.Component {
             }
             cookies.set('accessToken', res.accessToken, {path: '/'})
             cookies.set('refreshToken', res.refreshToken, {path: '/'})
-            //forward to new page 
+            //forward to new page
             window.location.replace('/dashboard')
         })
         this.setState({
@@ -76,8 +78,8 @@ class Login extends React.Component {
             email: ""
         })
 
-        
-        
+
+
     }
 
     render() {
@@ -111,4 +113,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login 
+export default Login
