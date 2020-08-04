@@ -51,13 +51,14 @@
 
 .profile-details{
   margin-left: 40px;
+  margin-right: 40px;
 }
 
 .profile-details-wrapper{
   background-color: rgb(228, 228, 228);
   border: 0px;
   border-radius: 7px;
-  width: 50vw;
+  width: auto;
 }
 
 .profile-details-wrapper ul{
@@ -87,18 +88,25 @@
   outline: none;
 }
 
+.dashboard-journalwrapper{
+  margin-left: 20px;
+  padding: 0px
+}
+
 .dashboard-journalday-overview{
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-right: 20px;
   padding: 5px;
   background-color: rgb(228, 228, 228);
   border: 0px;
   border-radius: 7px;
-  width: 50vw;
+  width: auto;
 }
 
 .dashboard-journalentry-overview ul{
   list-style-type: none;
+  padding-left: 2vw;
 
 }
 
@@ -106,9 +114,41 @@
   padding-top: 10px;
   padding-bottom: 10px;
   font-weight: bold;
+  font-size: 18px; 
+}
+.dashboard-journalentry-overview-sets{
+  margin-left: 10px;
 }
 
 .dashboard-journalday-overview-date{
   font-weight: bold;
   font-size: 20px;
+}
+
+.dashboard-journalentry-overview-toggle-up{
+  background-color: transparent;
+  margin-left: 5px;
+  border: none;
+
+}
+.dashboard-journalentry-overview-toggle-up:hover{
+  cursor: pointer;
+}
+
+.dashboard-journalentry-overview-toggle-up:focus{
+  outline: none;
+}
+
+.dashboard-journalentry-overview-toggle-down{
+  background-color: transparent;
+  margin-left: 5px;
+  border: none;
+  color: grey
+
+}
+.dashboard-journalentry-overview-toggle-down:hover{
+  cursor: pointer;
+}
+.dashboard-journalentry-overview-toggle-down:focus{
+  outline: none;
 }

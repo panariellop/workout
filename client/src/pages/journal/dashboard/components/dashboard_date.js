@@ -11,6 +11,7 @@ class DashboardDate extends React.Component{
   }
 
   render(){
+    //props get input as an array
     const {props} = this.props
     const entries = props.map((entry, i)=> <DashboardEntry key = {i} props = {entry}/>)
 

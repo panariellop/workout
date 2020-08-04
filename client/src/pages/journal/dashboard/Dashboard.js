@@ -63,7 +63,7 @@ class Dashboard extends React.Component{
       const days = this.state.entries.map((day, i) => <DashboardDate key={i} props = {day}/>)
         return(
             <Fragment>
-              <ul>
+              <ul className = "dashboard-journalwrapper">
                 {days}
               </ul>
             </Fragment>
