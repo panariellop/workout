@@ -17,7 +17,11 @@ class DashboardDate extends React.Component{
 
     return(
       <Fragment>
-      <p className = "dashboard-journalday-overview-date">{new Date(props[0].date).toLocaleDateString()}<Fragment>+</Fragment></p>
+      <p className = "dashboard-journalday-overview-date">
+        {new Date(props[0].date).toLocaleDateString()}
+        <button className = "dashboard-journalday-addentry-btn">ADD ENTRY</button>
+        <button className = "dashboard-journalday-expand-btn">EXPAND</button>
+      </p>
         <div className = "dashboard-journalday-overview">
           {entries}
         </div>

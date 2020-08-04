@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import DashboardDate from './components/dashboard_date.js'
 import RefreshAccessToken from '../../../scripts/RefreshAccessToken'
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
 async function getUserEntries(){
   var entries = []
@@ -63,6 +64,7 @@ class Dashboard extends React.Component{
       const days = this.state.entries.map((day, i) => <DashboardDate key={i} props = {day}/>)
         return(
             <Fragment>
+              <Link className = "link" to = "/entry"><button className = "dashboard-journal-newentry-btn">NEW ENTRY</button></Link>
               <ul className = "dashboard-journalwrapper">
                 {days}
               </ul>

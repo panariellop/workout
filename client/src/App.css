@@ -1,3 +1,6 @@
+.link{
+  text-decoration: none; 
+}
 .loginForm{
   margin-top: 10%;
   background-color: rgb(228, 228, 228);
@@ -103,6 +106,64 @@
   border-radius: 7px;
   width: auto;
 }
+.dashboard-journal-newentry-btn{
+  font-weight: bold;
+  font-size: 20px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: transparent;
+  border: 0px;
+  padding-left: 5px;
+  color: rgb(88, 81, 227);
+  letter-spacing: 0.4px;
+
+}
+
+.dashboard-journal-newentry-btn:hover{
+  cursor: pointer;
+  color: blue;
+}
+.dashboard-journal-newentry-btn:focus{
+  outline: none;
+}
+
+.dashboard-journalday-addentry-btn{
+  font-size: 13px;
+  background-color: transparent;
+  border: 0px;
+  padding-left: 5px;
+  color: rgb(88, 81, 227);
+  letter-spacing: 0.4px;
+
+}
+.dashboard-journalday-addentry-btn:hover{
+  cursor: pointer;
+  color: blue;
+}
+.dashboard-journalday-addentry-btn:focus{
+  outline: none;
+}
+
+.dashboard-journalday-expand-btn{
+  margin-left: 20px;
+  font-size: 13px;
+  background-color: transparent;
+  border: 0px;
+  padding-left: 5px;
+  color: rgb(88, 81, 227);
+  letter-spacing: 0.4px;
+
+}
+.dashboard-journalday-expand-btn:hover{
+  cursor: pointer;
+  color: blue;
+}
+.dashboard-journalday-expand-btn:focus{
+  outline: none;
+}
 
 .dashboard-journalentry-overview ul{
   list-style-type: none;
@@ -114,7 +175,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
   font-weight: bold;
-  font-size: 18px; 
+  font-size: 18px;
 }
 .dashboard-journalentry-overview-sets{
   margin-left: 10px;
