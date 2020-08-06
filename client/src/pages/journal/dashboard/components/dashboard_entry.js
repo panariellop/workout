@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-
+import {Link} from 'react-router-dom'
 class DashboardEntry extends React.Component{
   constructor(props){
     super(props)
@@ -33,11 +33,13 @@ class DashboardEntry extends React.Component{
         )
     })
 
+    const entry_edit_link = "/entry/" + props._id
+
     return(
       <Fragment>
         <div className = "dashboard-journalentry-overview">
           <ul>
-            <li className = "dashboard-journalentry-overview-title">{props.exercise}{caretToggle}</li>
+            <li className = "dashboard-journalentry-overview-title"><Link className = "link" to = {entry_edit_link}>{props.exercise}</Link>{caretToggle}</li>
             <li className = "dashboard-journalentry-overview-sets">{this.state.showSets && sets}</li>
           </ul>
         </div>

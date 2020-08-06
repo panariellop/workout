@@ -27,7 +27,7 @@ function App() {
         <Route path = '/logout' component = {Logout}/>
 
         <Route path = '/dashboard' component = {Dashboard}/>
-        <Route path = '/entry' component = {Entry}/>
+        <Route path = '/entry/:id' component = {Entry}/>
         <Route path = '/profile' component = {Profile}/>
       </Switch>
     </div>

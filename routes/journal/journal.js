@@ -12,6 +12,14 @@ router.get("/", authenticateToken, async (req, res)=> {
     return res.status(200).json(entries);
 });
 
+router.get("/:id", authenticateToken, async(req,res)=> {
+    const {id} = req.params
+    await JournalEntry.findById(id, (err, result)=> {
+        if(err) return res.sendStatus(404)
+        if (result) return res.status(200).json(result)
+    }).catch(e => console.log())
+})
+
 //DESC create a new entry
 router.post("/", authenticateToken, async(req,res)=> {
     const { date, exercise, location, sets} = req.body
@@ -22,12 +30,12 @@ router.post("/", authenticateToken, async(req,res)=> {
 
 //DESC update an entry
 router.put('/:id', authenticateToken, async (req, res)=> {
-    const { date, exercise, sets } = req.body;
+    const { date, location, exercise, sets } = req.body;
     //Make sure the user is authorized to edit this entry
     await JournalEntry.findById(req.params.id, (err, result)=> {
         if(err) return res.sendStatus(500)
         if(result.user !== req.user.username) return res.sendStatus(401)
-        result.updateOne({ date, exercise, sets }, (err, raw)=> {
+        result.updateOne({ date, location, exercise, sets }, (err, raw)=> {
             if(err) return res.sendStatus(500)
             return res.status(200).json({msg: "Entry updated"})
         })
