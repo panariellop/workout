@@ -25,7 +25,7 @@ router.post("/", authenticateToken, async(req,res)=> {
     const { date, exercise, location, sets} = req.body
     const newEntry = new JournalEntry({ date, exercise, location, user: req.user.username, sets })
     newEntry.save()
-    return res.status(200).json({msg: "Entry added"});
+    return res.status(200).json(newEntry);
 })
 
 //DESC update an entry

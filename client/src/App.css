@@ -1,5 +1,11 @@
 .link{
+  transition: 0.4s;
   text-decoration: none; 
+  color: black; 
+}
+
+.link:hover {
+  color: blue; 
 }
 .loginForm{
   margin-top: 10%;
@@ -131,7 +137,7 @@
 }
 
 .dashboard-journalday-addentry-btn{
-  font-size: 13px;
+  font-size: 20px;
   background-color: transparent;
   border: 0px;
   padding-left: 5px;
@@ -147,23 +153,6 @@
   outline: none;
 }
 
-.dashboard-journalday-expand-btn{
-  margin-left: 20px;
-  font-size: 13px;
-  background-color: transparent;
-  border: 0px;
-  padding-left: 5px;
-  color: rgb(88, 81, 227);
-  letter-spacing: 0.4px;
-
-}
-.dashboard-journalday-expand-btn:hover{
-  cursor: pointer;
-  color: blue;
-}
-.dashboard-journalday-expand-btn:focus{
-  outline: none;
-}
 
 .dashboard-journalentry-overview ul{
   list-style-type: none;
@@ -190,10 +179,12 @@
   background-color: transparent;
   margin-left: 5px;
   border: none;
+	transition: 0.4s
 
 }
 .dashboard-journalentry-overview-toggle-up:hover{
   cursor: pointer;
+	color: blue; 
 }
 
 .dashboard-journalentry-overview-toggle-up:focus{
@@ -204,11 +195,13 @@
   background-color: transparent;
   margin-left: 5px;
   border: none;
-  color: grey
+  color: grey;
+	transition: 0.4s
 
 }
 .dashboard-journalentry-overview-toggle-down:hover{
   cursor: pointer;
+	color: blue; 
 }
 .dashboard-journalentry-overview-toggle-down:focus{
   outline: none;
@@ -222,6 +215,24 @@
   border: 0px;
   border-radius: 7px;
   padding: 10px;
+}
+.journalentry-delete-btn{
+	display: flex;
+	float: right; 
+	background-color: transparent;	
+	border: 0px; 
+	border-radius: 7px;
+	color: red;
+	font-size: 15px;
+	transition: 0.4s;
+}
+
+.journalentry-delete-btn:hover{
+	color: white; 
+	background-color: red;	
+}
+.journalentry-delete-btn:focus{
+	outline: none; 
 }
 
 .journal-new-set-btn{
@@ -257,8 +268,54 @@
   padding-left: 0px; 
 }
 
+.jounralentry-form-input input{
+  text-align: center; 
+  font-size: large;
+  transition: 0.4s;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  height: 20px;
+  width: 200px;
+  padding: 3px;
+  background-color: rgb(184, 184, 184);
+}
+
+.jounralentry-form-input input:focus{
+  transition: 0.4s;
+  background-color: rgb(228, 228, 228);
+  border-color: lightgrey;
+  border-bottom: 2px solid blue;
+  border-radius: 3px;
+  outline: none;
+}
+
 .journal-newset-setfields input{
-  
+  font-size: medium;
+  width: 100px;
+  transition: 0.4s;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  height: 20px;
+  padding: 3px;
+  background-color: rgb(184, 184, 184);
+}
+
+.journal-newset-setfields input:focus {
+  transition: 0.4s;
+  background-color: rgb(228, 228, 228);
+  border-color: lightgrey;
+  border-bottom: 2px solid blue;
+  border-radius: 3px;
+  outline: none;
+}
+
+.journal-newset-setfields label{
+  display: inline-block;
+  width: 75px; 
 }
 
 .journal-set-delete-btn{
@@ -297,15 +354,45 @@
   font-size: 15px;
   background-color: transparent;
   border: 0px;
+	border-radius: 7px;
   padding-left: 5px;
   color: rgb(68, 171, 72);
   letter-spacing: 0.4px; 
+	transition: 0.4s;
 }
 
 .journalentry-form-submit-btn-saved:hover{
-  cursor: pointer
+  cursor: pointer;
+	background-color: rgb(68, 171, 72);
+	color: white; 
 }
 
 .journalentry-form-submit-btn-saved:focus{
   outline: none; 
 }
+
+.journalentry-back-btn{
+  transition: 0.4s;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  width: 30px;
+  height: 30px; 
+  background-color: transparent;
+  border: 1px solid blue;
+  border-radius: 7px; 
+  font-size: 30px; 
+  margin-left: 30px;
+  margin-bottom: 10px;
+
+}
+.journalentry-back-btn:hover{
+  cursor: pointer; 
+  background-color: grey; 
+  border-color: transparent;
+}
+.journalentry-back-btn:focus{
+  outline: none;
+}
+
+

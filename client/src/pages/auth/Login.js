@@ -52,7 +52,7 @@ class Login extends React.Component {
             cookies.set('accessToken', res.accessToken, {path: '/'})
             cookies.set('refreshToken', res.refreshToken, {path: '/'})
             //forward to new page
-            window.location.replace('/dashboard')
+            window.location.assign('/dashboard')
         })
         this.setState({
             username: "",

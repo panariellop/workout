@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react';
 import RefreshAccessToken from '../../../scripts/RefreshAccessToken'
 import Cookies from 'js-cookie'
-import { JsonWebTokenError } from 'jsonwebtoken';
 
 class Entry extends React.Component{
   constructor(props){
@@ -19,6 +18,8 @@ class Entry extends React.Component{
     this.handleSetChange = this.handleSetChange.bind(this)
     this.handleNewSet = this.handleNewSet.bind(this)
     this.handleSetDelete = this.handleSetDelete.bind(this)
+    this.handleBack = this.handleBack.bind(this)
+		this.handleEntryDelete = this.handleEntryDelete.bind(this)
   }
 
   async componentDidMount(){
@@ -26,7 +27,7 @@ class Entry extends React.Component{
     //update tokens
     const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
     .catch(e => console.log(e));
-    await Cookies.set('accessToken', newAccessToken)
+    Cookies.set('accessToken', newAccessToken)
     //make api call 
     const entry_route = "/api/journal/" + this.props.match.params.id; 
     await fetch(entry_route, {
@@ -51,6 +52,26 @@ class Entry extends React.Component{
     })
     .catch(e => console.log(e))
   }
+
+	async handleEntryDelete(){
+		const c = window.confirm("Are you sure you want to delete this entry?")
+		if(!c) return
+		//Handle updating tokens 
+		const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
+    .catch(e => console.log(e));
+    Cookies.set('accessToken', newAccessToken)
+    
+		await fetch("/api/journal/" + this.state._id, {
+			method: 'delete',
+			headers: {
+				'x-auth-token': Cookies.get('accessToken')
+			}
+		})
+		.then(res => {
+			window.location.assign('/dashboard')
+		})
+		.catch(e=> console.log(e))	
+	}
 
   handleNewSet(){
     const newSet = {
@@ -97,12 +118,16 @@ class Entry extends React.Component{
     })
   }
 
+  handleBack(){
+    window.history.back();
+  }
+
   async handleSubmit(e){
     e.preventDefault()
     //update tokens
     const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
     .catch(e => console.log(e));
-    await Cookies.set('accessToken', newAccessToken)
+    Cookies.set('accessToken', newAccessToken)
     //make api calls to update or create 
     if (this.props.match.params.id === "new"){
       //create new entry 
@@ -178,12 +203,15 @@ class Entry extends React.Component{
 
     return (
       <Fragment>
+        <button className = "journalentry-back-btn" onClick = {this.handleBack}>‹</button>
         <div className = "journalentry-wrapper">
         <form autoComplete="off"className = "journalentry-form" onSubmit = {this.handleSubmit}>
-          <input type="text" placeholder = "Exercise" value = {this.state.exercise} name = "exercise" onChange = {this.handleChange}/><br/>
-          <input type="text"  placeholder = "Location" value = {this.state.location} name = "location" onChange = {this.handleChange}/><br/>
-          <input type = "date" name = "date" value = {this.state.date} onChange = {this.handleChange}/><br/>
-          <h3>Sets:<button type = "button" className = "journal-new-set-btn" onClick = {this.handleNewSet}>+</button></h3>
+          <div className = "jounralentry-form-input">
+            <input type="text" placeholder = "Exercise" value = {this.state.exercise} name = "exercise" onChange = {this.handleChange}/><br/>
+            <input type="text"  placeholder = "Location" value = {this.state.location} name = "location" onChange = {this.handleChange}/><br/>
+            <input type = "date" name = "date" value = {this.state.date} onChange = {this.handleChange}/><br/>
+            <h3>Sets:<button type = "button" className = "journal-new-set-btn" onClick = {this.handleNewSet}>+</button></h3>
+          </div>
           <ul>
             {sets}
           </ul>
@@ -193,8 +221,10 @@ class Entry extends React.Component{
           <input className = "journalentry-form-submit-btn-saved" type = "submit" value = "SAVED"/> 
           : <input className = "journalentry-form-submit-btn" type = "submit" value = "SAVE"/>}
           
+					<button className = "journalentry-delete-btn" type = "button" onClick = {this.handleEntryDelete}>DELETE</button>
         </form>
-        
+				
+
         </div>
       </Fragment>
     )

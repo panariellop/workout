@@ -3,7 +3,6 @@ import DashboardDate from './components/dashboard_date.js'
 import RefreshAccessToken from '../../../scripts/RefreshAccessToken'
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
-import FilterEntries from './components/filter_entries'
 
 
 async function getUserEntries(){
@@ -52,8 +51,10 @@ class Dashboard extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-          entries: []
+          entries: [],
+          query_string: ""
         }
+        this.handleChange = this.handleChange.bind(this)
     }
 
     async componentDidMount(){
@@ -62,11 +63,24 @@ class Dashboard extends React.Component{
       })
     }
 
+    async filterEntries(){
+      console.log("hi")
+    }
+
+    handleChange(e) {
+      this.setState({
+        [e.target.name]: e.target.value
+      })
+    }
+
     render(){
       const days = this.state.entries.map((day, i) => <DashboardDate key={i} props = {day}/>)
         return(
             <Fragment>
               <Link className = "link" to = "/entry/new"><button className = "dashboard-journal-newentry-btn">NEW ENTRY</button></Link>
+
+              <input type = "text" name = "query_string" value = {this.state.query_string} placeholder = "Search" onChange = {this.handleChange, this.filterEntries}/>
+
               <ul className = "dashboard-journalwrapper">
                 {days}
               </ul>
