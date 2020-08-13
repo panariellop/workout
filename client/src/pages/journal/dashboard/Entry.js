@@ -67,7 +67,7 @@ class Entry extends React.Component{
 				'x-auth-token': Cookies.get('accessToken')
 			}
 		})
-		.then(res => {
+		.then(() => {
 			window.location.assign('/dashboard')
 		})
 		.catch(e=> console.log(e))	

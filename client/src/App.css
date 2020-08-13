@@ -136,22 +136,6 @@
   outline: none;
 }
 
-.dashboard-journalday-addentry-btn{
-  font-size: 20px;
-  background-color: transparent;
-  border: 0px;
-  padding-left: 5px;
-  color: rgb(88, 81, 227);
-  letter-spacing: 0.4px;
-
-}
-.dashboard-journalday-addentry-btn:hover{
-  cursor: pointer;
-  color: blue;
-}
-.dashboard-journalday-addentry-btn:focus{
-  outline: none;
-}
 
 
 .dashboard-journalentry-overview ul{
@@ -170,7 +154,7 @@
   margin-left: 10px;
 }
 
-.dashboard-journalday-overview-date{
+.dashboard-journalday-overview-day{
   font-weight: bold;
   font-size: 20px;
 }
