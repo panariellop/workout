@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react';
 import DashboardEntry from './dashboard_entry.js'
-import RefreshAccessToken from '../../../../scripts/RefreshAccessToken'
-import Cookies from 'js-cookie'
+
 
 class DashboardDate extends React.Component{
   constructor(props){

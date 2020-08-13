@@ -12,15 +12,17 @@ class Dashboard extends React.Component{
           entries: [],
           raw_entries: [],
           query_string: "",
-					num_entries: 10, 
+					num_entries: 10, //controlls the rendering of how many entries on the dashboard page 
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleFetchEntries = this.handleFetchEntries.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
     }
 
     async handleFetchEntries(){
       const re = /^[0-9\b]+$/;
       var num_entries = this.state.num_entries; 
+      //re.test tests for non-alpha characters 
       if(num_entries == null || num_entries <=0 || !re.test(num_entries)){
         num_entries = 1
       }
@@ -78,9 +80,37 @@ class Dashboard extends React.Component{
       this.handleFetchEntries()
     }
 
-    async filterEntries(){
-      //
+    handleSearch(data){
+      var days = [[]]
+      var prev_entry = null
+      var entries = []
+      if(data.length>0){
+        entries = data
+      }else{
+        entries = this.state.raw_entries
+      }
+      
+      for(var i=0; i<entries.length; i++){
+        if(prev_entry === null){
+          prev_entry = entries[i]
+        }
+        if(new Date(prev_entry.date).toLocaleDateString() === new Date(entries[i].date).toLocaleDateString()){
+          //push the entry to the array with the same date
+          days[days.length-1].push(entries[i])
+        }else{
+          //create new dimension with the newest date being the first item
+          days.push([entries[i]])
+        }
+        //make the previous entry the current entry as we move on
+        prev_entry = entries[i]
+      }
+      this.setState({
+        entries: days
+      })
+      
     }
+
+    
 
     handleChange(e) {
       this.setState({
@@ -95,7 +125,7 @@ class Dashboard extends React.Component{
             <Fragment>
               <Link className = "link" to = "/entry/new"><button className = "dashboard-journal-newentry-btn">NEW ENTRY</button></Link>
 
-              <Search entries = {this.state.raw_entries}/>
+              <Search handleSearch = {this.handleSearch} entries = {this.state.raw_entries}/>
 
               <ul className = "dashboard-journalwrapper">
                 {days}

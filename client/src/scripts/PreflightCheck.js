@@ -1,14 +1,11 @@
 const axios = require('axios');
 const cookies = require('js-cookie')
-require('dotenv').config()
-
 async function preflightCheck(){
 	//Get cookies
-	var accessToken = cookies.get('accessToken')
 	var refreshToken = cookies.get('refreshToken')
 
 	//Refresh the access token
-	var newAccessToken = null
+	var accessToken = Cookies.get('accessToken')
     await axios({
         method: "POST",
         url: "/api/auth/users/token",
@@ -16,15 +13,12 @@ async function preflightCheck(){
             token: refreshToken
         }
     }).then(res => {
-        newAccessToken = res.data.accessToken
+        accessToken = res.data.accessToken
     }).catch(e=> {
         console.log(e)
     })
 
     //set new access token
-    cookies.set('accessToken', newAccessToken)
-
-
+    cookies.set('accessToken', accessToken)
 };
-
 module.exports = preflightCheck;
