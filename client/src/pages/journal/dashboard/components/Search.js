@@ -5,6 +5,7 @@ class Search extends React.Component{
         super(props)
         this.state = {
 			query_string: "",
+			query_inputs :[],
 			filtered_entries: []
         }
 		this.handleChange = this.handleChange.bind(this)
@@ -43,26 +44,90 @@ class Search extends React.Component{
 					}
 				}catch(e){}
 			}
+			//Get the day of the week 
+			var day_of_week = null; 
+			try{
+				switch(user_input[1].toLowerCase()){
+					default: 
+						break;
+					case "mon":
+					case "monday":
+						day_of_week = 0;
+						break; 
+					case "tues":
+					case "tuesday":
+						day_of_week = 1;
+						break;
+					case "wed":
+					case "wednesday":
+						day_of_week = 2; 
+						break; 
+					case "thurs":
+					case "thur":
+					case "thu":
+					case "thursday":
+						day_of_week = 3;
+						break; 
+					case "fri":
+					case "friday":
+						day_of_week = 4;
+						break;
+					case "sat":
+					case "saturday":
+						day_of_week = 5;
+						break; 
+					case "sun":
+					case "sunday":
+						day_of_week = 6;
+						break; 
+				}
+			}catch(e){}
+			//loop through each entry and only allow days of the week that match input 
+			if(day_of_week!== null){
+				for (var i = 0; i<this.props.entries.length; i++){
+					try{
+						//Specific day of the week  
+						var entry_date = new Date(this.props.entries[i].date)
+						entry_date = entry_date.getDay(); 
+
+						if(day_of_week === entry_date){
+							//push to filtered_entries array
+							filtered_entries.push(this.props.entries[i])
+						}
+					}catch(e){}
+				}
+			}
+
 		}
 		//filter by name 
 		else if(user_input[0] === "name"){
 			for (var i = 0; i<this.props.entries.length; i++){
-				if(user_input[1] === this.props.entries[i].exercise){
-					//push to filtered_entries array
-					filtered_entries.push(this.props.entries[i])
-				}
+				//if the names match or if part of the name matches 
+				try{
+					if(this.props.entries[i].exercise.toLowerCase().includes(user_input[1].toLowerCase())){
+						//push to filtered_entries array
+						filtered_entries.push(this.props.entries[i])
+					}
+				}catch(e){}
 			}
 		}
 		//filter by location 
 		else if(user_input[0] === "location"){
 			for (var i = 0; i<this.props.entries.length; i++){
-				if(user_input[1] === this.props.entries[i].location){
-					//push to filtered_entries array
-					filtered_entries.push(this.props.entries[i])
+				//if the location match or if part of the location matches 
+				try{
+					if(this.props.entries[i].location.toLowerCase().includes(user_input[1].toLowerCase())){
+						//push to filtered_entries array
+						filtered_entries.push(this.props.entries[i])
+					}
+				}catch(e){
+					continue; 
 				}
 			}
 		}
+
 		this.setState({
+			query_inputs: user_input, 
 			filtered_entries: filtered_entries
 		})
 	}
@@ -84,7 +149,7 @@ class Search extends React.Component{
                    await this.handleChange(e); 
 				   await this.filterEntries(); 
 				   await this.props.handleSearch(this.state.filtered_entries); 
-                }} value = {this.state.query_string} name = "query_string" placeholder = "Search"/>
+                }} value = {this.state.query_string} name = "query_string" placeholder = "🔍"/>
             </Fragment>
         )
     }

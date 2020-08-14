@@ -29,7 +29,17 @@ class DashboardEntry extends React.Component{
 
     const sets = props.sets.map((set, i)=> {
         return (
-          <p key = {i}>Set {i+1})   Weight: {set.weight} {set.units} | Reps: {set.reps} | Duration: {set.duration} | Intensity: {set.intensity}</p>
+          <Fragment>
+            <p>Set {i+1})</p>
+          <ul key = {i} className = "dashboard-journalentry-overview-sets-set">
+            {set.weight && <li>Weight: {set.weight}</li>} 
+            {set.units && <li>Units: {set.units}</li>} 
+            {set.reps && <li>Reps: {set.reps}</li> } 
+            {set.duration && <li>Duration: {set.duration}</li>} 
+            {set.distance && <li>Distance: {set.distance}</li>}
+            {set.intensity && <li>Intensity: {set.intensity}</li>}
+          </ul>
+          </Fragment>
         )
     })
 

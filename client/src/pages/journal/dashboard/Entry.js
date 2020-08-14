@@ -18,7 +18,6 @@ class Entry extends React.Component{
     this.handleSetChange = this.handleSetChange.bind(this)
     this.handleNewSet = this.handleNewSet.bind(this)
     this.handleSetDelete = this.handleSetDelete.bind(this)
-    this.handleBack = this.handleBack.bind(this)
 		this.handleEntryDelete = this.handleEntryDelete.bind(this)
   }
 
@@ -118,9 +117,7 @@ class Entry extends React.Component{
     })
   }
 
-  handleBack(){
-    window.history.back();
-  }
+
 
   async handleSubmit(e){
     e.preventDefault()
@@ -203,7 +200,6 @@ class Entry extends React.Component{
 
     return (
       <Fragment>
-        <button className = "journalentry-back-btn" onClick = {this.handleBack}>&lt;</button>
         <div className = "journalentry-wrapper">
         <form autoComplete="off"className = "journalentry-form" onSubmit = {this.handleSubmit}>
           <div className = "jounralentry-form-input">

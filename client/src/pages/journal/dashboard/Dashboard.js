@@ -4,12 +4,12 @@ import RefreshAccessToken from '../../../scripts/RefreshAccessToken'
 import Cookies from 'js-cookie';
 import Search from './components/Search'
 import { Link } from 'react-router-dom';
-import addBtn from '../../../static/images/simple_add_btn.png'
 
 class Dashboard extends React.Component{
     constructor(props){
         super(props)
         this.state = {
+          loading: true, 
           entries: [],
           raw_entries: [],
           query_string: "",
@@ -21,6 +21,9 @@ class Dashboard extends React.Component{
     }
 
     async handleFetchEntries(){
+      this.setState({
+        loading: true, 
+      })
       const re = /^[0-9\b]+$/;
       var num_entries = this.state.num_entries; 
       //re.test tests for non-alpha characters 
@@ -60,7 +63,7 @@ class Dashboard extends React.Component{
         if(prev_entry === null){
           prev_entry = entries[i]
         }
-        if(new Date(prev_entry.date).toLocaleDateString() === new Date(entries[i].date).toLocaleDateString()){
+        if(new Date(prev_entry.date).getDay() === new Date(entries[i].date).getDay()){
           //push the entry to the array with the same date
           days[days.length-1].push(entries[i])
         }else{
@@ -72,7 +75,8 @@ class Dashboard extends React.Component{
       }
 
       this.setState({
-        entries: days
+        entries: days,
+        loading: false, 
       })
     }
 
@@ -82,6 +86,9 @@ class Dashboard extends React.Component{
     }
 
     handleSearch(data){
+      this.setState({
+        loading: true, 
+      })
       var days = [[]]
       var prev_entry = null
       var entries = []
@@ -106,7 +113,8 @@ class Dashboard extends React.Component{
         prev_entry = entries[i]
       }
       this.setState({
-        entries: days
+        entries: days,
+        loading: false, 
       })
       
     }
@@ -121,7 +129,10 @@ class Dashboard extends React.Component{
     }
 
     render(){
-      const days = this.state.entries.map((day, i) => <DashboardDate key={i} props = {day}/>)
+      var days = null; 
+      if(this.state.entries.length>0){
+        days = this.state.entries.map((day, i) => <DashboardDate key={i} props = {day}/>)
+      }
         return(
             <Fragment>
               <Link className = "link" to = "/entry/new"><button className = "dashboard-journal-newentry-btn">+</button></Link>
@@ -129,14 +140,16 @@ class Dashboard extends React.Component{
               <Search handleSearch = {this.handleSearch} entries = {this.state.raw_entries}/>
 
               <ul className = "dashboard-journalwrapper">
-                {days}
+                {(days || !this.state.loading)? days: <h2>Add some entries to view them here...</h2>}
               </ul>
 
-              <label>Number of Entries:</label>
-              <input autoComplete = "off" type = "tel" name = "num_entries" placeholder = "Number of entries to display..." value = {this.state.num_entries} onChange = {async (e) => {
-                await this.handleChange(e);
-                await this.handleFetchEntries();
-              }}/>
+              <div className = "dashboard-numentries-wrapper">
+                <label>Number of Entries:</label>
+                <input autoComplete = "off" type = "tel" name = "num_entries" placeholder = "Number of entries to display..." value = {this.state.num_entries} onChange = {async (e) => {
+                  await this.handleChange(e);
+                  await this.handleFetchEntries();
+                }}/>
+              </div>
             </Fragment>
         )
     }
