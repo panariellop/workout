@@ -79,6 +79,7 @@ class Search extends React.Component{
             <Fragment>
 				<input autoComplete = "off" type = "text" 
 				placeholder = "Search..."
+				className = "journal-search-bar-input"
 				onChange = {async (e) => {
                    await this.handleChange(e); 
 				   await this.filterEntries(); 

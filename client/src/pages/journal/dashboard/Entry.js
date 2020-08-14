@@ -203,7 +203,7 @@ class Entry extends React.Component{
 
     return (
       <Fragment>
-        <button className = "journalentry-back-btn" onClick = {this.handleBack}>‹</button>
+        <button className = "journalentry-back-btn" onClick = {this.handleBack}>&lt;</button>
         <div className = "journalentry-wrapper">
         <form autoComplete="off"className = "journalentry-form" onSubmit = {this.handleSubmit}>
           <div className = "jounralentry-form-input">

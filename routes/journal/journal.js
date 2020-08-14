@@ -7,7 +7,7 @@ const JournalEntry = require('../../models/JournalEntry');
 //ACCESS protected by auth
 
 //DESC get all of a user's entries
-router.post("/", authenticateToken, async (req, res)=> {
+router.post("/entries", authenticateToken, async (req, res)=> {
 		const { num_entries } = req.body; 
     var entries = await JournalEntry.find({user: req.user.username}, null ,{sort: {date: -1}});
 		//Allows for user to specify if they want the server to return all of the entries
@@ -21,6 +21,9 @@ router.post("/", authenticateToken, async (req, res)=> {
 //DESC get a specific entry
 router.get("/:id", authenticateToken, async(req,res)=> {
     const {id} = req.params
+    if(id === "new"){
+        return res.sendStatus(201)
+    }
     await JournalEntry.findById(id, (err, result)=> {
         if(err) return res.sendStatus(404)
         if (result) return res.status(200).json(result)

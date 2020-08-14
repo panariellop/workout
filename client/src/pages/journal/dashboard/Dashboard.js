@@ -4,6 +4,7 @@ import RefreshAccessToken from '../../../scripts/RefreshAccessToken'
 import Cookies from 'js-cookie';
 import Search from './components/Search'
 import { Link } from 'react-router-dom';
+import addBtn from '../../../static/images/simple_add_btn.png'
 
 class Dashboard extends React.Component{
     constructor(props){
@@ -12,7 +13,7 @@ class Dashboard extends React.Component{
           entries: [],
           raw_entries: [],
           query_string: "",
-					num_entries: 10, //controlls the rendering of how many entries on the dashboard page 
+					num_entries: 30, //controlls the rendering of how many entries on the dashboard page 
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleFetchEntries = this.handleFetchEntries.bind(this)
@@ -33,7 +34,7 @@ class Dashboard extends React.Component{
       .catch(e => console.log(e));
       Cookies.set('accessToken', newAccessToken)
       //make query to get all user entries
-      await fetch("/api/journal", {
+      await fetch("/api/journal/entries", {
         method: 'post',
         headers: {
           'x-auth-token': Cookies.get('accessToken'),
@@ -123,7 +124,7 @@ class Dashboard extends React.Component{
       const days = this.state.entries.map((day, i) => <DashboardDate key={i} props = {day}/>)
         return(
             <Fragment>
-              <Link className = "link" to = "/entry/new"><button className = "dashboard-journal-newentry-btn">NEW ENTRY</button></Link>
+              <Link className = "link" to = "/entry/new"><button className = "dashboard-journal-newentry-btn">+</button></Link>
 
               <Search handleSearch = {this.handleSearch} entries = {this.state.raw_entries}/>
 
@@ -131,6 +132,7 @@ class Dashboard extends React.Component{
                 {days}
               </ul>
 
+              <label>Number of Entries:</label>
               <input autoComplete = "off" type = "tel" name = "num_entries" placeholder = "Number of entries to display..." value = {this.state.num_entries} onChange = {async (e) => {
                 await this.handleChange(e);
                 await this.handleFetchEntries();
