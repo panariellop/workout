@@ -444,3 +444,13 @@
   border-radius: 3px;
   outline: none;
 }
+
+.search-creategraph-link{
+	text-decoration: none;
+	color: rgb(88, 81, 227);
+	font-size: 17px; 
+}
+
+.search-creategraph-link:hover{
+	color: blue; 
+}

@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom'; 
 
 class Search extends React.Component{
     constructor(props){
         super(props)
         this.state = {
 			query_string: "",
+			canGraph: false, 
 			query_inputs :[],
 			filtered_entries: []
         }
@@ -29,6 +31,9 @@ class Search extends React.Component{
 		
 		//filter by day 
 		if(user_input[0] === "date"){
+			this.setState({
+				canGraph: false, 
+			})
 			//loop through each entry and only allow dates that match input 
 			for (var i = 0; i<this.props.entries.length; i++){
 				try{
@@ -101,6 +106,9 @@ class Search extends React.Component{
 		}
 		//filter by name 
 		else if(user_input[0] === "name"){
+			this.setState({
+				canGraph: true
+			})
 			for (var i = 0; i<this.props.entries.length; i++){
 				//if the names match or if part of the name matches 
 				try{
@@ -113,6 +121,9 @@ class Search extends React.Component{
 		}
 		//filter by location 
 		else if(user_input[0] === "location"){
+			this.setState({
+				canGraph: true
+			})
 			for (var i = 0; i<this.props.entries.length; i++){
 				//if the location match or if part of the location matches 
 				try{
@@ -124,6 +135,11 @@ class Search extends React.Component{
 					continue; 
 				}
 			}
+		}
+		else{
+			this.setState({
+				canGraph: false, 
+			})
 		}
 
 		this.setState({
@@ -140,16 +156,28 @@ class Search extends React.Component{
     }
 
     render(){
+
         return(
             <Fragment>
-				<input autoComplete = "off" type = "text" 
-				placeholder = "Search..."
-				className = "journal-search-bar-input"
-				onChange = {async (e) => {
-                   await this.handleChange(e); 
-				   await this.filterEntries(); 
-				   await this.props.handleSearch(this.state.filtered_entries); 
-                }} value = {this.state.query_string} name = "query_string" placeholder = "🔍"/>
+							<input autoComplete = "off" type = "text" 
+							placeholder = "Search..."
+							className = "journal-search-bar-input"
+							onChange = {async (e) => {
+												 await this.handleChange(e); 
+								 await this.filterEntries(); 
+								 await this.props.handleSearch(this.state.filtered_entries); 
+											}} value = {this.state.query_string} name = "query_string" placeholder = "🔍"/>
+
+							{this.state.canGraph&& 
+								<Link
+								className = "search-creategraph-link"
+								to = {{
+									pathname: '/charts',
+									state: {
+										raw_data: this.state.filtered_entries
+									}
+								}}>Create Chart📈</Link>
+							}
             </Fragment>
         )
     }

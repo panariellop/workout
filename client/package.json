@@ -17,6 +17,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-uuid": "^1.0.2",
+    "recharts": "^1.8.5",
     "universal-cookie": "^4.0.3"
   },
   "scripts": {

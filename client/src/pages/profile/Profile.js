@@ -107,6 +107,11 @@ class Profile extends React.Component{
         })
     }
 
+    linkStyle = {
+        color: "blue",
+        textDecoration: "none",
+    }
+
     render(){
         return (
             <Fragment>
@@ -120,6 +125,11 @@ class Profile extends React.Component{
                         </li>
                         <li>Email: {this.state.user.email}</li>
                         <li>Account Type: {this.state.user.status}</li>
+                        <br/>
+                        <a style = {this.linkStyle} href = "/help">Help</a>
+                        <br/>
+                        <br/>
+                        <a style = {this.linkStyle} href = "/about">About</a>
                         <br/>
                         <br/>
                         <li><button onClick = {this.handleDeleteAccount} >DELETE ACCOUNT</button></li>

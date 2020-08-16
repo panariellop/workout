@@ -29,7 +29,7 @@ class DashboardEntry extends React.Component{
 
     const sets = props.sets.map((set, i)=> {
         return (
-          <Fragment>
+          <Fragment key = {i}>
             <p>Set {i+1})</p>
           <ul key = {i} className = "dashboard-journalentry-overview-sets-set">
             {set.weight && <li>Weight: {set.weight}</li>} 
