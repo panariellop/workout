@@ -10,7 +10,7 @@ const {authenticateToken} = require("../../middleware/authenticateToken");
 //@dsc      Register/login a user
 //@access   Public
 router.post("/register", async (req, res)=> {
-    const { username, email, password, status } = req.body; 
+    const { username, email, password, status, admin_key } = req.body; 
     if(!username || !password || !email){
         return res.status(401).send("Please fill out register form completely.")
     }
@@ -18,9 +18,17 @@ router.post("/register", async (req, res)=> {
     if(user!==null){
         return res.status(500).send("User already exists");
     }
+		const okemail = await User.findOne({email: email});
+		if(okemail !== null){
+			return res.status(500).send("Email belongs to a user");
+		}
+
+		if(status === "ADMIN" && (process.env.ADMIN_KEY !== admin_key)){
+			return res.send(401).send("Incorrect admin key"); 
+		}
 
     const newUser = new User({username, email, password, status});
-    newUser.save();
+		await newUser.save();
     
     //Sign jwt
     const accessToken = jwt.sign({username: username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN }); 
@@ -61,6 +69,7 @@ router.post('/token', async (req, res)=> {
     const requestToken = req.body.token; 
     //Check if token was given, is in the database, and matches one created
     if(requestToken===null) return res.sendStatus(400);
+		//Verify refresh token against database 
     const dataToken = await Token.findOne({refreshToken: requestToken});
     if(dataToken===null) return res.sendStatus(401); 
     if(dataToken.refreshToken!==requestToken) return res.sendStatus(401);

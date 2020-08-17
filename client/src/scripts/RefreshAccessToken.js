@@ -14,9 +14,12 @@ async function RefreshAccessToken(refreshToken){
     })
     .then(res => {
         newAccessToken = res.data.accessToken
+				//Not authed error
+				
     })
     .catch(e=> {
         console.log(e)
+				window.location.replace('/login')
     })
 
 

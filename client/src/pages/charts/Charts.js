@@ -5,7 +5,9 @@ class Charts extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-						chartKick: 0,
+            startDate: new Date().toISOString().slice(0,10), 
+            endDate: new Date().toISOString().slice(0,10), 
+            chartKick: 0,
             value: "weight",
             set_number: -1, 
             raw_data: [],
@@ -13,77 +15,91 @@ class Charts extends React.Component{
         }
         this.renderChart = this.renderChart.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleSave = this.handleSave.bind(this)
     }
 
    renderChart(){//Updates the filtered_data array in the state 
-        this.setState({
-					filtered_data: null 
-				})
-				console.log(this.state.filtered_data);
         //Need to iterate through the entirety of the raw data exercise, then their sets 
         for(var i = 0; i<this.props.location.state.raw_data.length; i++){
+            //Filter any date that does not fall into the start/endDate range 
+            if(new Date(this.state.startDate) > new Date(this.props.location.state.raw_data[i].date) || new Date(this.props.location.state.raw_data[i].date) > new Date(this.state.endDate)){
+                break;
+            }
             for (var j = 0; j<this.props.location.state.raw_data[i].sets.length; j++){
                 //push specific set number 
                 if(parseInt(this.state.set_number) !== -1 && parseInt(this.state.set_number) === j){
-                    var new_sets = this.state.filtered_data
-                    new_sets.push(this.props.location.state.raw_data[i].sets[j])
+					//appends filtered_data 
+					var new_sets = this.state.filtered_data
+					var new_set = this.props.location.state.raw_data[i].sets[j]
+					new_set.date = new Date(this.props.location.state.raw_data[i].date).toISOString().slice(0,10)
+                    new_sets.push(new_set)
                     this.setState({
                         //Push each set to the set array 
-                        filtered_data: new_sets
+                        filtered_data: new_sets,
+                        //kicks the chart to refresh it 
+                        chartKick: this.state.chartKick + 1,
+
                     })
                     break; 
                 }
                 //push all sets 
                 else if(parseInt(this.state.set_number) === -1){
-                    var new_sets = this.state.filtered_data
-                    new_sets.push(this.props.location.state.raw_data[i].sets[j])
+					var new_sets = this.state.filtered_data
+					var new_dates = this.props.location.state.raw_data[i].sets[j]
+					for(var s = 0; s<new_dates.length; s++){
+						new_dates[s].date= new Date(this.props.location.state.raw_data[i].date).toISOString().slice(0,10)
+					}
+                    new_sets.push(new_dates)
                     this.setState({
                         //Push each set to the set array 
-                        filtered_data: new_sets
+                        filtered_data: new_sets, 
+                        //kicks the chart to refresh it 
+                        chartKick: this.state.chartKick + 1,
                     })
                 }
             }
         }
+        
     }
 
-    componentDidMount() {
-				this.setState({
-            raw_data: this.props.location.state.raw_data
-        })
-        this.renderChart() 
+    async componentDidMount() {
+			await this.setState({
+				raw_data: this.props.location.state.raw_data,
+				endDate: new Date(this.props.location.state.raw_data[0].date).toISOString().slice(0,10),
+				startDate: new Date(this.props.location.state.raw_data[this.props.location.state.raw_data.length-1].date).toISOString().slice(0,10)
+			})
+			await this.renderChart() 
     }
 
-    handleChange(e){
-        this.setState({
-            [e.target.name]: e.target.value,
-						filtered_data: []
-        })
-        if(e.target.name === "set_number"){
-						//kicks the chart to refresh it 
-						this.setState({
-							chartKick: this.state.chartKick + 1
-						})
-        }
-        this.renderChart()
+    async handleChange(e){
+			await this.setState({
+                [e.target.name]: e.target.value,
+                filtered_data: [],
+            })	 
+			await this.renderChart()
     }
+
+    handleSave(){
+        //TODO save the chart to a png 
+    }
+			
 
     render(){
         return(
             <Fragment>
-                <h1>Charts</h1>
                 <ResponsiveContainer width = '100%' aspect={5/2}>
-                <LineChart key = {this.state.chartKick} data = {this.state.filtered_data} syncId = "anyId">
-                    <XAxis dataKey = "date"/>
-                    <YAxis/>
-                    <Tooltip/>
-                    <Legend/>
-                    <Line type = 'monotone' dataKey = {this.state.value} stroke="#8884d8" activeDot={{ r: 8 }} />
-                </LineChart>
+                    <LineChart key = {this.state.chartKick} data = {this.state.filtered_data} syncId = "anyId">
+                        <XAxis dataKey = "date" label = "Date" />
+                        <YAxis/>
+                        <Tooltip/>
+                        <Line type = 'monotone' dataKey = {this.state.value} stroke="#8884d8" activeDot={{ r: 8 }} />
+                    </LineChart>
                 </ResponsiveContainer>
-
-                <h5>Options</h5>
+								
+							<div className = "charts-options-wrapper">
+                <p>Chart Options</p>
                 <label>Y-axis:</label>
-                <select value = {this.state.value} name = "value" onChange = {this.handleChange}>
+                <select className = "charts-option-yaxis" value = {this.state.value} name = "value" onChange = {this.handleChange}>
                     <option value = "weight">Weight</option>
                     <option value = "reps">Reps</option>
                     <option value = "distance">Distance</option>
@@ -91,8 +107,8 @@ class Charts extends React.Component{
                     <option value = "intensity">Intensity</option>
                 </select>
                 <br/>
-                <label>Sets</label>
-                <select value = {this.state.set_number} name = "set_number" onChange = {this.handleChange}>
+				<label>Sets: </label>
+                <select className = "charts-option-set" value = {this.state.set_number} name = "set_number" onChange = {this.handleChange}>
                     <option value = {-1}>All</option>
                     <option value = {0}>1st Set</option>
                     <option value = {1}>2nd Set</option>
@@ -100,6 +116,15 @@ class Charts extends React.Component{
                     <option value = {3}>4th Set</option>
                     <option value = {4}>5th Set</option>
                 </select>
+                <br/>
+                <h3>Filter Data</h3>
+                <label>Start Date: </label>
+                <input type = "date" value = {this.state.startDate} name = "startDate" onChange = {this.handleChange} />
+                <br/>
+                <label>End Date: </label>
+                <input type = "date" value = {this.state.endDate} name = "endDate" onChange = {this.handleChange} />
+                <button onClick = {this.handleSave} >SAVE CHART</button>
+                </div>
             </Fragment>
         )
     }
