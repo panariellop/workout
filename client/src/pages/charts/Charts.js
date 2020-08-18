@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { ResponsiveContainer, LineChart, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts'; 
+import { ResponsiveContainer, LineChart, XAxis, YAxis, Tooltip, Line } from 'recharts'; 
 
 class Charts extends React.Component{
     constructor(props){
@@ -22,8 +22,8 @@ class Charts extends React.Component{
         //Need to iterate through the entirety of the raw data exercise, then their sets 
         for(var i = 0; i<this.props.location.state.raw_data.length; i++){
             //Filter any date that does not fall into the start/endDate range 
-            if(new Date(this.state.startDate) > new Date(this.props.location.state.raw_data[i].date) || new Date(this.props.location.state.raw_data[i].date) > new Date(this.state.endDate)){
-                break;
+            if(new Date(this.state.startDate) > new Date(this.props.location.state.raw_data[i].date) || new Date(this.state.endDate) < new Date(this.props.location.state.raw_data[i].date)){
+                continue;
             }
             for (var j = 0; j<this.props.location.state.raw_data[i].sets.length; j++){
                 //push specific set number 
@@ -44,39 +44,42 @@ class Charts extends React.Component{
                 }
                 //push all sets 
                 else if(parseInt(this.state.set_number) === -1){
-					var new_sets = this.state.filtered_data
+					// add date to each set 
+					var new_sets_all = this.state.filtered_data
 					var new_dates = this.props.location.state.raw_data[i].sets[j]
-					for(var s = 0; s<new_dates.length; s++){
-						new_dates[s].date= new Date(this.props.location.state.raw_data[i].date).toISOString().slice(0,10)
-					}
-                    new_sets.push(new_dates)
+					new_dates.date = new Date(this.props.location.state.raw_data[i].date).toISOString().slice(0,10)
+                    new_sets_all.push(new_dates)
                     this.setState({
                         //Push each set to the set array 
-                        filtered_data: new_sets, 
+                        filtered_data: new_sets_all, 
                         //kicks the chart to refresh it 
                         chartKick: this.state.chartKick + 1,
                     })
                 }
             }
-        }
+		}
+		this.setState({
+			//chronological ordering 
+			filtered_data: this.state.filtered_data.reverse()
+		})
         
     }
 
     async componentDidMount() {
-			await this.setState({
-				raw_data: this.props.location.state.raw_data,
-				endDate: new Date(this.props.location.state.raw_data[0].date).toISOString().slice(0,10),
-				startDate: new Date(this.props.location.state.raw_data[this.props.location.state.raw_data.length-1].date).toISOString().slice(0,10)
-			})
-			await this.renderChart() 
+		await this.setState({
+			raw_data: this.props.location.state.raw_data,
+			endDate: new Date(this.props.location.state.raw_data[0].date).toISOString().slice(0,10),
+			startDate: new Date(this.props.location.state.raw_data[this.props.location.state.raw_data.length-1].date).toISOString().slice(0,10)
+		})
+		await this.renderChart() 
     }
 
     async handleChange(e){
-			await this.setState({
-                [e.target.name]: e.target.value,
-                filtered_data: [],
-            })	 
-			await this.renderChart()
+		await this.setState({
+			[e.target.name]: e.target.value,
+			filtered_data: [],
+		})	 
+		await this.renderChart()
     }
 
     handleSave(){
@@ -85,12 +88,16 @@ class Charts extends React.Component{
 			
 
     render(){
+		//Capps the value for the y-axis lable
+		var y_axis_label = this.state.value.charAt(0).toUpperCase()+this.state.value.slice(1)
         return(
             <Fragment>
                 <ResponsiveContainer width = '100%' aspect={5/2}>
                     <LineChart key = {this.state.chartKick} data = {this.state.filtered_data} syncId = "anyId">
-                        <XAxis dataKey = "date" label = "Date" />
-                        <YAxis/>
+                        <XAxis dataKey = "date" height = {100} label = {{value: "Date"}}/>
+						<YAxis 
+							domain = {['dataMin', 'dataMax']}
+							label = {{value: y_axis_label, angle: -90, position: 'insideLeft'}}/>
                         <Tooltip/>
                         <Line type = 'monotone' dataKey = {this.state.value} stroke="#8884d8" activeDot={{ r: 8 }} />
                     </LineChart>
