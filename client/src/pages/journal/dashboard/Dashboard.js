@@ -144,7 +144,7 @@ class Dashboard extends React.Component{
               </ul>
 
               <div className = "dashboard-numentries-wrapper">
-                <label>Number of Entries:</label>
+                <label>Max Number of Entries:</label>
                 <input autoComplete = "off" type = "tel" name = "num_entries" placeholder = "Number of entries to display..." value = {this.state.num_entries} onChange = {async (e) => {
                   await this.handleChange(e);
                   await this.handleFetchEntries();

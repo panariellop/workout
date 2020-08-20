@@ -216,8 +216,8 @@ class Entry extends React.Component{
           {this.state.saved ? 
           <input className = "journalentry-form-submit-btn-saved" type = "submit" value = "SAVED"/> 
           : <input className = "journalentry-form-submit-btn" type = "submit" value = "SAVE"/>}
-          
-					<button className = "journalentry-delete-btn" type = "button" onClick = {this.handleEntryDelete}>DELETE</button>
+          {this.state.saved && <button className = "journalentry-delete-btn" type = "button" onClick = {this.handleEntryDelete}>DELETE</button>}
+					
         </form>
 				
 
