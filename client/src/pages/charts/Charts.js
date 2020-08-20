@@ -8,14 +8,14 @@ class Charts extends React.Component{
             startDate: new Date().toISOString().slice(0,10), 
             endDate: new Date().toISOString().slice(0,10), 
             chartKick: 0,
-            value: "weight",
             set_number: -1, 
             raw_data: [],
-            filtered_data: []
+            filtered_data: [],
+            data_lines: ["weight"]
         }
         this.renderChart = this.renderChart.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.handleSave = this.handleSave.bind(this)
+        this.handleLinesChange = this.handleLinesChange.bind(this)
     }
 
    renderChart(){//Updates the filtered_data array in the state 
@@ -81,38 +81,96 @@ class Charts extends React.Component{
 		})	 
 		await this.renderChart()
     }
-
-    handleSave(){
-        //TODO save the chart to a png 
+    async handleLinesChange(e){
+        if(e.target.name === "new_line" && this.state.data_lines.length<2){
+            var new_line = this.state.data_lines
+            new_line.push("weight")
+            this.setState({
+                data_lines: new_line
+            })
+        }
+        else if (e.target.name === "delete_line"){
+            var new_line = this.state.data_lines
+            new_line.splice(e.target.value, 1)
+            this.setState({
+                data_lines: new_line
+            })
+        }
+        else{
+            var new_lines = this.state.data_lines
+            new_lines[e.target.name] = e.target.value 
+            this.setState({
+                data_lines: new_lines
+            })
+        }
     }
-			
-
+    
     render(){
-		//Capps the value for the y-axis lable
-		var y_axis_label = this.state.value.charAt(0).toUpperCase()+this.state.value.slice(1)
+		//Makes the y axis label from state 
+        var y_axis_label = ""
+        for(var i = 0; i<this.state.data_lines.length; i++){
+            y_axis_label += this.state.data_lines[i].charAt(0).toUpperCase()+this.state.data_lines[i].slice(1)
+            if(i!==this.state.data_lines.length-1){
+                y_axis_label += ", "
+            }
+        }
         return(
             <Fragment>
-                <ResponsiveContainer width = '100%' aspect={5/2}>
-                    <LineChart key = {this.state.chartKick} data = {this.state.filtered_data} syncId = "anyId">
+                <div style = {{marginTop: '100px'}}>
+                <ResponsiveContainer 
+                width = '100%' height = {500}>
+                    <LineChart 
+                        key = {this.state.chartKick} data = {this.state.filtered_data} syncId = "anyId">
                         <XAxis dataKey = "date" height = {100} label = {{value: "Date"}}/>
-						<YAxis 
-							domain = {['dataMin', 'dataMax']}
+                        <YAxis 
+                            orientation = "left"
+                            scale = "linear"
+                            domain = {['dataMin', 'auto']}
 							label = {{value: y_axis_label, angle: -90, position: 'insideLeft'}}/>
+                        {this.state.data_lines.map((line, i)=> {
+                            if(i===1){
+                                return(
+                                <Line yAxisId = "2" key = {i} type = 'monotone' dataKey = {this.state.data_lines[i]} stroke="#fa3232" activeDot={{ r: 8 }} />
+                                )
+                            }else{
+                                return(
+                                <Line yAxisID = "1" key = {i} type = 'monotone' dataKey = {this.state.data_lines[i]} stroke="#8884d8" activeDot={{ r: 8 }} />
+                                )
+                            }
+                        })}
+                        {this.state.data_lines.length === 2? 
+                        <YAxis 
+                            yAxisId = "2"
+                            scale = "linear"
+                            orientation = "right"
+							domain = {['dataMin', 'auto']}
+							dataKey = {this.state.data_lines[1]}
+                            /> : null}
                         <Tooltip/>
-                        <Line type = 'monotone' dataKey = {this.state.value} stroke="#8884d8" activeDot={{ r: 8 }} />
+                        
                     </LineChart>
                 </ResponsiveContainer>
-								
-							<div className = "charts-options-wrapper">
+                </div>          
+				<div className = "charts-options-wrapper">
                 <p>Chart Options</p>
-                <label>Y-axis:</label>
-                <select className = "charts-option-yaxis" value = {this.state.value} name = "value" onChange = {this.handleChange}>
-                    <option value = "weight">Weight</option>
-                    <option value = "reps">Reps</option>
-                    <option value = "distance">Distance</option>
-                    <option value = "duration">Duration</option>
-                    <option value = "intensity">Intensity</option>
-                </select>
+                
+                {this.state.data_lines.map((line, i) => {
+                    return (<Fragment key = {i}>
+                        <label>Line {i+1})</label>
+                        <select className = "charts-option-yaxis" value = {this.state.data_lines[i]} name = {i} onChange = {this.handleLinesChange}>
+                            <option value = "weight">Weight</option>
+                            <option value = "reps">Reps</option>
+                            <option value = "distance">Distance</option>
+                            <option value = "duration">Duration</option>
+                            <option value = "intensity">Intensity</option>
+                        </select>
+                        
+                        <button name = "delete_line" onClick = {this.handleLinesChange} value = {i}>-</button>
+                        <br/>
+                    </Fragment>)
+                })}
+                {this.state.data_lines.length<2? <button onClick = {this.handleLinesChange} name = "new_line">+</button>:null}
+                
                 <br/>
 				<label>Sets: </label>
                 <select className = "charts-option-set" value = {this.state.set_number} name = "set_number" onChange = {this.handleChange}>
@@ -130,7 +188,6 @@ class Charts extends React.Component{
                 <br/>
                 <label>End Date: </label>
                 <input type = "date" value = {this.state.endDate} name = "endDate" onChange = {this.handleChange} />
-                <button onClick = {this.handleSave} >SAVE CHART</button>
                 </div>
             </Fragment>
         )
