@@ -5,15 +5,21 @@ require('dotenv').config()
 const User = require("../../models/User");
 const Token = require('../../models/Token'); 
 const {authenticateToken} = require("../../middleware/authenticateToken");
+const bcrypt = require('bcrypt') 
 
 //@route    POST api/auth/users
 //@dsc      Register/login a user
 //@access   Public
 router.post("/register", async (req, res)=> {
-    const { username, email, password, status, admin_key } = req.body; 
+    var { username, email, password, status, admin_key } = req.body; 
     if(!username || !password || !email){
         return res.status(401).send("Please fill out register form completely.")
     }
+		//Salt the password for security reasons 
+		await bcrypt.hash(password, parseInt( process.env.BCRYPT_SALT_ROUNDS))
+		.then((hashedPassword)=> {
+			password = hashedPassword
+		})
     const user = await User.findOne({username: username});
     if(user!==null){
         return res.status(500).send("User already exists");
@@ -49,9 +55,14 @@ router.post('/login', async (req, res) => {
 
     //Authenticate user 
     const user = await User.findOne({ username: username });
-    if (user===null || user.password !== password){
-        return res.status(401).send("Invalid credentials.")
+    if (user===null){
+        return res.status(401).send("User does not exist.")
     }
+		//compare the salted password to the password entered 
+		const okpassword = await bcrypt.compare(password, user.password)
+		if(!okpassword){
+			return res.status(401).send("Invalid password"); 
+		}
 
     //Sign jwt
     const accessToken = jwt.sign({username: username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN }); 
