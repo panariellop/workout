@@ -5,6 +5,8 @@ const { authenticateToken } = require('../../middleware/authenticateToken');
 const User = require('../../models/User'); 
 const Token = require('../../models/Token')
 const JournalEntry = require('../../models/JournalEntry'); 
+const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 //DESC Get's a user's profile information 
 //ROUTE /api/profile 
@@ -12,8 +14,8 @@ const JournalEntry = require('../../models/JournalEntry');
 //BODY NONE
 router.get('/', authenticateToken, async (req,res)=> {
     var user = await User.findOne({username: req.user.username})
-    //do not send over password -- send over password's length in asteriks 
-    user.password = "*".repeat(user.password.length)
+    //do not send over password -- send over some random asteriks 
+    user.password = "*".repeat(3)
     return res.json(user)
 })
 
@@ -22,12 +24,21 @@ router.get('/', authenticateToken, async (req,res)=> {
 //METHOD POST 
 //BODY { old_password, new_password }
 router.post('/changepassword', authenticateToken, async (req, res)=> {
-	const { new_password, old_password } = req.body
+	var { new_password, old_password } = req.body
 	var user = await User.findOne({username: req.user.username})
-	//Confirm password 
-	if(old_password != user.password){
+	
+	//Confirm password using bcrypt
+	const okpassword = bcrypt.compare(old_password, user.password)
+	if(!okpassword){
 		return res.sendStatus(401)
 	}
+	
+	//Salt the password for security reasons 
+	await bcrypt.hash(new_password, parseInt( process.env.BCRYPT_SALT_ROUNDS))
+	.then((hashedPassword)=> {
+		new_password = hashedPassword
+	})
+
 	//Update user object in database  
 	const newUser = await  User.findOneAndUpdate({username: req.user.username}, {
 		password: new_password

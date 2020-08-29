@@ -58,11 +58,12 @@ router.post('/login', async (req, res) => {
     if (user===null){
         return res.status(401).send("User does not exist.")
     }
-		//compare the salted password to the password entered 
-		const okpassword = await bcrypt.compare(password, user.password)
-		if(!okpassword){
-			return res.status(401).send("Invalid password"); 
-		}
+    
+	//compare the salted password to the password entered 
+	const okpassword = await bcrypt.compare(password, user.password)
+	if(!okpassword){
+		return res.status(401).send("Invalid password"); 
+	}
 
     //Sign jwt
     const accessToken = jwt.sign({username: username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFESPAN }); 

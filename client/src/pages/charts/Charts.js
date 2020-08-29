@@ -189,6 +189,25 @@ class Charts extends React.Component{
                 <label>End Date: </label>
                 <input type = "date" value = {this.state.endDate} name = "endDate" onChange = {this.handleChange} />
                 </div>
+
+                <div className = "chart-history-wrapper">
+                    <h3>History</h3>
+                    {this.state.filtered_data.map((value, i)=> {
+                        return(
+                        <Fragment>
+                            <div className = "chart-history-entry">
+                                <ul>
+                                    <li>Weight: {this.state.filtered_data[i].weight}</li>
+                                    <li>Units: {this.state.filtered_data[i].units}</li>
+                                    <li>Reps: {this.state.filtered_data[i].reps}</li>
+                                    <li>Duration: {this.state.filtered_data[i].duration}</li>
+                                    <li>Intensity: {this.state.filtered_data[i].intensity}</li>
+                                </ul>
+                            </div>
+                        </Fragment>
+                        )
+                    })}
+                </div>
             </Fragment>
         )
     }
