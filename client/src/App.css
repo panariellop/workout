@@ -499,3 +499,27 @@
 .charts-options-wrapper button:focus{
 	outline: none; 
 }
+
+.chart-history-wrapper{
+	margin-left: 15px;
+	margin-right: 20px;
+	text-align: center;
+	
+}
+
+.chart-history-wrapper ul{
+	list-style-type: none; 
+}
+
+.chart-history-entry ul{
+	padding-left: 0px; 
+}
+
+.chart-history-entry{
+	background-color: #c7c7c7;
+	border-radius: 7px;
+	width: 200px; 
+	margin-left: auto;
+	margin-right: auto;
+	 
+}

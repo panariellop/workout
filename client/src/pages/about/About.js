@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 class About extends React.Component{
     render(){
@@ -11,6 +11,8 @@ class About extends React.Component{
         return(
             <div style = {wrapper}>
                 <h1 style = {{textAlign: 'center'}}>About</h1>
+                <p>This software was created by Piero Doré Panariello 
+                on August 29, 2020. (c) All Rights Reserved</p>
             </div>
         )
     }

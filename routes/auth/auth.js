@@ -47,6 +47,8 @@ router.post("/register", async (req, res)=> {
 
 });
 
+//@desc 	Login a user 
+//@access 	Public
 router.post('/login', async (req, res) => {       
     const { username, password } = req.body;
     if(!username || !password){
@@ -76,7 +78,8 @@ router.post('/login', async (req, res) => {
 
 }); 
 
-//Get new accessToken
+//@desc 	Give the user a new access token
+//@access 	Private
 router.post('/token', async (req, res)=> {
     const requestToken = req.body.token; 
     //Check if token was given, is in the database, and matches one created
@@ -95,7 +98,8 @@ router.post('/token', async (req, res)=> {
 
 });
 
-//Logout
+//@desc 	Logout a user
+//@access 	Private 
 router.delete('/logout', authenticateToken, async (req, res)=> {
     //Delete all refresh tokens attached to the current user 
     await Token.deleteMany({user: req.user.username}, (err, result)=> {

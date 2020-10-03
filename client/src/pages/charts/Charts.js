@@ -192,16 +192,22 @@ class Charts extends React.Component{
 
                 <div className = "chart-history-wrapper">
                     <h3>History</h3>
-                    {this.state.filtered_data.map((value, i)=> {
+                    {this.state.filtered_data.reverse().map((value, i)=> {
                         return(
                         <Fragment>
                             <div className = "chart-history-entry">
+								<h3>{this.state.filtered_data[i].date}</h3>
                                 <ul>
-                                    <li>Weight: {this.state.filtered_data[i].weight}</li>
-                                    <li>Units: {this.state.filtered_data[i].units}</li>
-                                    <li>Reps: {this.state.filtered_data[i].reps}</li>
-                                    <li>Duration: {this.state.filtered_data[i].duration}</li>
-                                    <li>Intensity: {this.state.filtered_data[i].intensity}</li>
+                                    {this.state.filtered_data[i].weight &&
+										<li>Weight: {this.state.filtered_data[i].weight}</li>}
+									{this.state.filtered_data[i].units &&
+										<li>Units: {this.state.filtered_data[i].units}</li>}
+									{this.state.filtered_data[i].reps &&
+										<li>Reps: {this.state.filtered_data[i].reps}</li>}
+									{this.state.filtered_data[i].duration &&
+										<li>Duration: {this.state.filtered_data[i].duration}</li>}
+									{this.state.filtered_data[i].intensity &&
+										<li>Intensity: {this.state.filtered_data[i].intensity}</li>}
                                 </ul>
                             </div>
                         </Fragment>

@@ -176,7 +176,7 @@ class Search extends React.Component{
 									state: {
 										raw_data: this.state.filtered_entries
 									}
-								}}>Create Chart📈</Link>
+								}}>Create Chart<span role = "img">📈</span></Link>
 							}
             </Fragment>
         )
