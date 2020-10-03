@@ -194,7 +194,7 @@ class Charts extends React.Component{
                     <h3>History</h3>
                     {this.state.filtered_data.reverse().map((value, i)=> {
                         return(
-                        <Fragment>
+			<Fragment key = {i}>
                             <div className = "chart-history-entry">
 								<h3>{this.state.filtered_data[i].date}</h3>
                                 <ul>

@@ -22,7 +22,11 @@ const userSchema = mongoose.Schema({
     dateRegistered: {
         type: Date,
         default: Date.now
-    }
+    },
+		program_links: {
+				type: Map,
+				required: false, 
+		}
 });
 
 module.exports = mongoose.model("user", userSchema); 

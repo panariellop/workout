@@ -74,4 +74,66 @@ router.delete('/', authenticateToken, async (req, res)=> {
 	})
 	return res.json({msg: `User ${req.user.username}'s account is successfully deleted.`})
 })
+
+//@DESC: view all links 
+router.get('/program_links', authenticateToken, async(req,res)=> {
+	let user  = await User.findOne({username: req.user.username});
+	let cur_links = user.program_links
+	if(!cur_links){
+		return res.json({msg: `User ${res.user.username} did not have any links`})
+	}
+	return res.json({cur_links})
+})
+
+//@DESC: Create a link 
+router.post('/program_links', authenticateToken, async(req, res) => {
+	const { name, link } = req.body;
+	//Save the link to the user's profile
+	let user = User.findOne({username: req.user.username});
+	let cur_links = user.program_links
+	//Error handling 
+	if(!cur_links){
+		cur_links = {}
+	}
+	cur_links[name] = link;  
+	await User.findOneAndUpdate({username: req.user.username}, {program_links: cur_links}, (err, result)=> {
+		if(err) return res.status(500).json({msg: "Error adding a link"})
+		return res.json({msg: `New link successfully added to user ${req.user.username}'s account`})
+	});
+
+})
+//@DESC: Delete a link 
+router.delete('/program_links', authenticateToken, async(req, res) => {
+	const { name } = req.body;
+	//Save the link to the user's profile
+	let user = User.findOne({username: req.user.username});
+	let cur_links = user.program_links
+	//Error handling 
+	if(!cur_links){
+		return res.json({msg: `User ${req.user.username} does not have any program links`})
+	}
+	delete cur_links[name]  
+	await User.findOneAndUpdate({username: req.user.username}, {program_links: cur_links}, (err, result)=> {
+		if(err) return res.status(500).json({msg: "Error removing a link"})
+		return res.json({msg: `Link successfully removed`})
+	});
+
+})
+//@DESC: Update a link 
+router.put('/program_links', authenticateToken, async(req, res) => {
+	const { name, link } = req.body;
+	//Save the link to the user's profile
+	let user = User.findOne({username: req.user.username});
+	let cur_links = user.program_links
+	//Error handling 
+	if(!cur_links){
+		return res.json({msg: `User ${req.user.username} does not have any program links`})
+	}
+	cur_links[name] = link;   
+	await User.findOneAndUpdate({username: req.user.username}, {program_links: cur_links}, (err, result)=> {
+		if(err) return res.status(500).json({msg: "Error updating a link"})
+		return res.json({msg: `Link successfully updated`})
+	});
+
+})
 module.exports = router
