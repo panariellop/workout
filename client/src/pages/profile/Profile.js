@@ -31,8 +31,12 @@ class Profile extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            user: null
+            user: null,
+	    new_program_name: "",
+	    new_program_link:"",
         }
+        this.handleProgramLink = this.handleProgramLink.bind(this)
+	this.handleChange = this.handleChange.bind(this)
     }
 
     async handleChangePassword(){
@@ -103,8 +107,61 @@ class Profile extends React.Component{
 
     async componentDidMount(){
         this.setState({
-            user: await getUser()
+            user: await getUser(),
+	    
         })
+	
+    }
+
+    handleChange(e){
+	this.setState({[e.target.name]: e.target.value})
+    }
+
+    async handleProgramLink(reqtype){
+        //Update tokens
+        //Refresh tokens
+        const newAccessToken = await RefreshAccessToken(Cookies.get('refreshToken'))
+        .catch(e => console.log(e));
+        await Cookies.set('accessToken', newAccessToken)
+
+        if(reqtype === 'POST'){
+            //make post request to backend 
+            fetch('/api/profile/program_links', {
+                method: 'post',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'x-auth-token': Cookies.get('accessToken')
+                },
+                body: JSON.stringify({
+                    'name': this.state.new_program_name ,
+                    'link': this.state.new_program_link
+                })
+            }).then(res=> {
+                if(res.status === 200) return alert("Link successfuly added.")
+                else return alert("There was an error adding the link. Please try again.")
+            })
+        }
+        else if(reqtype === 'DELETE'){
+            //make delte request to backend 
+            fetch('/api/profile/program_links', {
+                method: 'delete',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'x-auth-token': Cookies.get('accessToken')
+                },
+                body: JSON.stringify({
+                    'name': this.state.new_program_name ,
+                    'link': this.state.new_program_link
+                })
+            }).then(res=> {
+                if(res.status === 200) return alert("Link successfuly deleted.")
+                else return alert("There was an error deleting the link. Please try again.")
+            })
+        }
+        this.setState({
+            user: await getUser() //re-updates the local user class 
+        })
+
     }
 
     linkStyle = {
@@ -130,6 +187,23 @@ class Profile extends React.Component{
                         <br/>
                         <br/>
                         <a style = {this.linkStyle} href = "/about">About</a>
+
+                        {this.state.user.program_links &&
+                        <div className = "profile-program-links-wrapper">
+                            <h3>Program Links</h3>
+                         {Object.keys(this.state.user.program_links).map((obj, i)=> {
+                            return (
+                                <li key = {i}>{obj} <a>{this.state.user.program_links[obj]}</a></li>
+                            )
+                        })}
+                        <input value = {this.state.new_program_name}
+                        onChange = {this.handleChange} name = 'new_program_name'/>
+                        <input value = {this.state.new_program_link}
+                        onChange = {this.handleChange} name = 'new_program_link'/>
+                         <button onClick = {() => {this.handleProgramLink('POST')}}>Add a Link</button>
+                        </div>
+                        }
+
                         <br/>
                         <br/>
                         <li><button onClick = {this.handleDeleteAccount} >DELETE ACCOUNT</button></li>
