@@ -75,6 +75,11 @@ router.delete('/', authenticateToken, async (req, res)=> {
 	return res.json({msg: `User ${req.user.username}'s account is successfully deleted.`})
 })
 
+/*
+A user can save links to their profile for later viewing
+supports CRUD format
+*/
+
 //@DESC: view all links 
 router.get('/program_links', authenticateToken, async(req,res)=> {
 	let user  = await User.findOne({username: req.user.username});

@@ -2,15 +2,13 @@ const mongoose = require('mongoose');
 
 const EntrySet = mongoose.Schema({
     weight: {
-        type: String,
+        value: {type: Number},
+        units: {type: String},
         required: false
     },
-    units: {
-      type: String,
-      required: false
-    },
+    //User can specify percentages of input parameters for each set 
     reps: {
-        type: String,
+        type: Number,
         required: false,
     },
     duration: {
@@ -18,13 +16,18 @@ const EntrySet = mongoose.Schema({
         required: false,
     },
     distance: {
-        type: String,
-        required: false,
+        value: {type: Number}, 
+        units: {type: String},
+        required: false, 
     },
     intensity: {
         type: String,
         required: false,
     },
+    notes: {
+        type: String, required: false
+    }
+    
 })
 
 const JournalEntrySchema = mongoose.Schema({
