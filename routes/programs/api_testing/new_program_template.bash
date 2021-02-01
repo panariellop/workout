@@ -1,0 +1,1 @@
+curl --verbose -d '{"user": "panariellop", "duration_days": 20, "input_params":"benchmax"}' -H 'Content-Type: application/json' -H 'x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhbmFyaWVsbG9wIiwiaWF0IjoxNjEyMTQwNjEzLCJleHAiOjE2MTIxNzY2MTN9.dUPQebKKzrE4FVKGduCLFDFxtIu6D5nHGTXnsAfJJ0g' -X POST http://localhost:5000/api/templates/type/programtemplate

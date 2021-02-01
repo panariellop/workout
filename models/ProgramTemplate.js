@@ -46,7 +46,8 @@ const WorkoutTemplate = mongoose.Schema({
 	day_number: {
 		type: Number, required: true
 	},
-	exercises: [ExerciseTemplate]
+	exercises: [ExerciseTemplate],
+	notes: {type: String, required: false}
 })
 
 
@@ -60,10 +61,16 @@ const ProgramTemplate = mongoose.Schema({
 		required: true, 
 	}, 
 	workouts: [WorkoutTemplate], 
-	input_params: []
+	input_params: [String]
 	//let the user define some input parameters that will determine how the program gets synthesized from the program template
 
 })
 
 
-module.exports = mongoose.model("ProgramTemplate", ProgramTemplateSchema);
+module.exports = {
+	ProgramTemplate: mongoose.model("ProgramTemplate", ProgramTemplate),
+	WorkoutTemplate: mongoose.model("WorkoutTemplate", WorkoutTemplate),
+	ExerciseTemplate: mongoose.model("ExerciseTemplate", ExerciseTemplate),
+	SetTemplate: mongoose.model("SetTemplate", SetTemplate),
+
+}
