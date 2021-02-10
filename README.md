@@ -6,10 +6,13 @@ nodejs, expressjs, react, mongodb version of workout_planner
 
 TODO:
 [ ] Finish program API 
-[ ] Get exercise template api to work 
-[ ] Get set template api to work 
-IN PROGRESS:
-[ ] Get workout template api to work 
 
+IN PROGRESS:
+[ ] Finish delete program template api
 
 DONE:
+[X] Get workout template create api to work 
+[X] Get exercise template create api to work 
+[X] Get set template api to work 
+[X] Finish update program template api 
+

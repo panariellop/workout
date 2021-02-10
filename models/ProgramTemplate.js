@@ -15,7 +15,8 @@ const SetTemplate = mongoose.Schema({
         required: false,
     },
     duration: {
-        type: String,
+        value: {type: Number},
+        units: {type: String}, 
         required: false,
     },
   	distance: {

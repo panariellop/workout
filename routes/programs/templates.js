@@ -37,6 +37,10 @@ Url Request: (id)
 	- DELETE a new workout template with a parent program template with id 
 	- DELETE a new exercise template with a parent workout template with id 
 	- DELETE a new set template with a parent exercise template with id 
+
+NOTES:
+    - Use a recursive defined model to reduce lookup time with a large amount of data
+    and to reduce references 
 */
 
 const express = require('express');
@@ -45,8 +49,7 @@ const { authenticateToken } = require('../../middleware/authenticateToken');
 const { ProgramTemplate, WorkoutTemplate, ExerciseTemplate, SetTemplate }= require('../../models/ProgramTemplate')
 //@DSC READ 
 //PROTECTED = TRUE 
-//TODO: add authenticateToken in middleware
-router.get('/type/:type/all/:all/id/:id', async(req, res)=>{
+router.get('/type/:type/all/:all/id/:id', authenticateToken, async(req, res)=>{
 	const {type, all, id} = req.params; 
 	if(type == "programtemplate"){
 		if(all == "true"){
@@ -56,6 +59,7 @@ router.get('/type/:type/all/:all/id/:id', async(req, res)=>{
 			})
 		}else{
 			await ProgramTemplate.findById(id, function(err, program){
+                if(err) return res.status(500); 
 				return res.status(200).json({data: program})
 			})
 		}
@@ -73,10 +77,12 @@ router.get('/type/:type/all/:all/id/:id', async(req, res)=>{
 	}
 })
 
+//@DESC CREATE 
+//PROTECTED = TRUE
 router.post('/type/:type/parent/:id1/:id2/:id3', authenticateToken, async(req, res)=>{
 	const {type, id1, id2, id3} = req.params; 
 	if(type == "programtemplate"){
-		const {duration_days, workouts, input_params } = req.body; 
+		const {duration_days, input_params } = req.body; 
 		newProgramTemplate = new ProgramTemplate({
 			user: req.user.username, 
 			duration_days: duration_days, 
@@ -88,7 +94,7 @@ router.post('/type/:type/parent/:id1/:id2/:id3', authenticateToken, async(req, r
 	else if(type == "workouttemplate"){
 		const {day_number, notes} = req.body; 
 		await ProgramTemplate.findById(id1, (err, programTemplate)=>{
-			if(err) return res.sendStatus(500); 
+			if(err) return res.status(500).json(err); 
 			newWorkoutTemplate = new WorkoutTemplate({
 				day_number: day_number, 
 				notes: notes
@@ -105,7 +111,7 @@ router.post('/type/:type/parent/:id1/:id2/:id3', authenticateToken, async(req, r
 		//need to recursively find the workout template because they are part of the program template object
 		await ProgramTemplate.findById(id1, (err, programTemplate)=>{
 			newExerciseTemplate = null; 
-			if(err) return res.sendStatus(500); 
+			if(err) return res.status(500).json(err); 
 			for(var i = 0; i<programTemplate.workouts.length; i++){
 				if(programTemplate.workouts[i].id == id2){
 					newExerciseTemplate = new ExerciseTemplate({
@@ -121,25 +127,115 @@ router.post('/type/:type/parent/:id1/:id2/:id3', authenticateToken, async(req, r
 	}
 	else if(type == "settemplate"){
 		const {weight, reps, duration, distance, intensity, notes} = req.body; 
-		await ExerciseTemplate.findById(id, (err, exerciseTemplate)=>{
-			if(err) return res.status(500); 
-			newSetTemplate = new SetTemplate({
-				weight: weight, 
-				reps: reps, 
-				duration: duration, 
-				distance: distance, 
-				intensity: intensity, 
-				notes: notes, 
-			})	
-			exerciseTemplate.sets.push(newSetTemplate); 
-			exerciseTemplate.save()
-			return res.status(200).json(newSetTemplate)
-		})
+        var newSetTemplate = null; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err)res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == id2){
+                    for(var j = 0; j<programTemplate.workouts[i].exercises.length; j++){
+                        if(programTemplate.workouts[i].exercises[j].id == id3){
+                            newSetTemplate = new SetTemplate({
+                                weight: weight, 
+                                reps: reps, 
+                                duration: duration, 
+                                distance: distance, 
+                                intensity: intensity, 
+                                notes: notes, 
+                            })
+                            programTemplate.workouts[i].exercises[j].sets.push(newSetTemplate); 
+
+                            break; 
+                        }
+                    }
+                    break; 
+                }
+            }
+            programTemplate.save(); 
+            return res.status(200).json(newSetTemplate); 
+        })
 	}
 })
 
-router.put('/type/:type/id/:id', authenticateToken, (req, res)=>{
-	const {type, id} = req.body; 
+//UPDATE 
+router.put('/type/:type/parent/:id1/:id2/:id3/targetid/:targetid', authenticateToken, (req, res)=>{
+	const {type, id1, id2, id3, targetid} = req.body; 
+    if(type == "programtemplate"){
+		const {duration_days, input_params } = req.body; 
+        await ProgramTemplate.findById(targetid, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            programTemplate.duration_days = duration_days; 
+            programTemplate.input_params = input_params; 
+            programTemplate.save()
+            return res.status(200).json(programTemplate); 
+        })
+    }
+    else if(type == "workouttemplate"){
+		const {day_number, notes} = req.body; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == targetid){
+                    //Update the workout object 
+                    programTemplate.workouts[i].day_number = day_number; 
+                    programTemplate.workouts[i].notes = notes; 
+                    break; 
+                }
+            }
+            programTemplate.save(); 
+            return res.status(200).json(programTemplate); 
+        })
+    }
+    else if(type == "exercisetemplate"){
+		const {name, notes} = req.body; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == id2){
+                    for(var j = 0; j<programTemplate.workouts[i].exercises.length; j++){
+                        if(programTemplate.workouts[i].exercises.id == targetid){
+                            //update the exercise model 
+                            programTemplate.workouts[i].exercises.name = name; 
+                            programTemplate.workouts[i].exercises.notes = notes; 
+                            break; 
+                        }
+                    }
+                    break; 
+                }
+            }
+            programTemplate.save();
+            return res.status(200).json(programTemplate); 
+        })
+    }
+    else if(type =="settemplate"){
+		const {weight, reps, duration, distance, intensity, notes} = req.body; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == id2){
+                    for(var j = 0; j<programTemplate.workouts[i].exercises.length; j++){
+                        if(programTemplate.workouts[i].exercises.id == id3){
+                            for(var k = 0; k<programTemplate.workouts[i].exercises[j].sets.length; k++){
+                                if(programTemplate.workouts[i].exercises[j].sets[k].id == targetid){
+                                    //update set model 
+                                    set = programTemplate.workouts[i].exercises[j].sets[k]
+                                    set.weight = weight; set.reps = reps; set.duration = duration; set.distance = distance;
+                                    set.intensity = intensity; set.notes = notes; 
+                                    programTemplate.workouts[i].exercises[j].sets[k] = set;
+
+                                    break; 
+                                }
+                            }
+                            break; 
+                        }
+                    }
+                    break; 
+                }
+            }
+            programTemplate.save();
+            return res.status(200).json(programTemplate); 
+        })
+    }
+
 
 })
 
