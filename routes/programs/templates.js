@@ -157,8 +157,91 @@ router.post('/type/:type/parent/:id1/:id2/:id3', authenticateToken, async(req, r
 })
 
 //UPDATE 
-router.put('/type/:type/parent/:id1/:id2/:id3/targetid/:targetid', authenticateToken, (req, res)=>{
-	const {type, id1, id2, id3, targetid} = req.body; 
+router.put('/type/:type/parent/:id1/:id2/:id3/targetid/:targetid', authenticateToken, async(req, res)=>{
+	const {type, id1, id2, id3, targetid} = req.params; 
+    if(type == "programtemplate"){
+		const {duration_days, input_params } = req.body; 
+        await ProgramTemplate.findById(targetid, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            programTemplate.duration_days = duration_days; 
+            programTemplate.input_params = input_params; 
+            programTemplate.save()
+            return res.status(200).json(programTemplate); 
+        })
+    }
+    else if(type == "workouttemplate"){
+		const {day_number, notes} = req.body; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == targetid){
+                    //Update the workout object 
+                    programTemplate.workouts[i].day_number = day_number; 
+                    programTemplate.workouts[i].notes = notes; 
+                    break; 
+                }
+            }
+            programTemplate.save(); 
+            return res.status(200).json(programTemplate); 
+        })
+    }
+    else if(type == "exercisetemplate"){
+        const {name, notes} = req.body; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == id2){
+                    for(var j = 0; j<programTemplate.workouts[i].exercises.length; j++){
+                        if(programTemplate.workouts[i].exercises[j].id == targetid){
+                            //update the exercise model 
+                            programTemplate.workouts[i].exercises[j].name = name; 
+                            programTemplate.workouts[i].exercises[j].notes = notes; 
+                            break; 
+                        }
+                    }
+                    break; 
+                }
+            }
+            programTemplate.save();
+            return res.status(200).json(programTemplate); 
+        })
+    }
+    else if(type =="settemplate"){
+		const {weight, reps, duration, distance, intensity, notes} = req.body; 
+        await ProgramTemplate.findById(id1, (err, programTemplate)=>{
+            if(err) return res.status(500).json(err); 
+            for(var i = 0; i<programTemplate.workouts.length; i++){
+                if(programTemplate.workouts[i].id == id2){
+                    for(var j = 0; j<programTemplate.workouts[i].exercises.length; j++){
+                        if(programTemplate.workouts[i].exercises[j].id == id3){
+                            for(var k = 0; k<programTemplate.workouts[i].exercises[j].sets.length; k++){
+                                if(programTemplate.workouts[i].exercises[j].sets[k].id == targetid){
+                                    //update set model 
+                                    console.log(targetid)
+                                    set = programTemplate.workouts[i].exercises[j].sets[k]
+                                    set.weight = weight; set.reps = reps; set.duration = duration; set.distance = distance;
+                                    set.intensity = intensity; set.notes = notes; 
+                                    programTemplate.workouts[i].exercises[j].sets[k] = set;
+                                    break; 
+                                }
+                            }
+                            break; 
+                        }
+                    }
+                    break; 
+                }
+            }
+            programTemplate.save();
+            return res.status(200).json(programTemplate); 
+        })
+    }
+
+
+})
+router.delete('/type/:type/parent/:id1/:id2/:id3/targetid/:targetid', authenticateToken, async(req, res)=>{
+    console.log(type)
+    //TODO Change it to delte the objects 
+	const {type, id1, id2, id3, targetid} = req.params; 
     if(type == "programtemplate"){
 		const {duration_days, input_params } = req.body; 
         await ProgramTemplate.findById(targetid, (err, programTemplate)=>{
@@ -221,7 +304,6 @@ router.put('/type/:type/parent/:id1/:id2/:id3/targetid/:targetid', authenticateT
                                     set.weight = weight; set.reps = reps; set.duration = duration; set.distance = distance;
                                     set.intensity = intensity; set.notes = notes; 
                                     programTemplate.workouts[i].exercises[j].sets[k] = set;
-
                                     break; 
                                 }
                             }
@@ -238,7 +320,6 @@ router.put('/type/:type/parent/:id1/:id2/:id3/targetid/:targetid', authenticateT
 
 
 })
-
 module.exports = router; 
 
 

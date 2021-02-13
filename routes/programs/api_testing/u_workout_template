@@ -1,0 +1,4 @@
+curl -X PUT --verbose -d '{"day_number": 1, "notes":"this is my first updated workout"}' -H 'Content-Type: application/json' -H 'x-auth-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhbmFyaWVsbG9wIiwiaWF0IjoxNjEzMTcwMjkyLCJleHAiOjE2MTMyMDYyOTJ9.O6YJMi03z1E5pzVdQ5dBOF6qqL2Wq-wc5r5sQw9Aqvo' http://localhost:5000/api/templates/type/workouttemplate/parent/601ad3c188c5294ef17f6bbd/0/0/targetid/601ad4f55ae0064f5c261297
+echo 
+
+
